@@ -577,6 +577,33 @@ html.static .glifo { animation: none; }
   font-size: 15px; font-weight: var(--w-semi);
 }
 .area-body { position: relative; display: grid; gap: clamp(44px, 6vw, 72px); padding-top: clamp(36px, 5vw, 60px); padding-bottom: 90px; }
+.area-shell {
+  position: relative;
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 56px);
+  padding-top: clamp(28px, 4vw, 44px);
+  padding-bottom: 90px;
+}
+.area-menu { display: grid; gap: 6px; align-content: start; align-self: start; position: sticky; top: 86px; }
+.area-voce {
+  text-align: left; background: none; border: 0; cursor: pointer;
+  font: inherit; font-size: 15px; color: var(--ash);
+  padding: 12px 16px; border-radius: 16px;
+  transition: color .2s ease, background .2s ease;
+}
+.area-voce:hover { color: var(--bone); }
+.area-voce.on { color: var(--bone); background: rgba(34, 40, 69, 0.45); }
+.area-voce:focus-visible { outline: 2px solid var(--blu); outline-offset: 2px; }
+.area-content { display: grid; gap: clamp(30px, 4vw, 44px); min-width: 0; align-content: start; }
+.area-vista { display: grid; gap: clamp(28px, 4vw, 44px); }
+.area-vista[hidden] { display: none; }
+@media (max-width: 860px) {
+  .area-shell { grid-template-columns: 1fr; }
+  .area-menu { position: static; display: flex; overflow-x: auto; gap: 4px; scrollbar-width: none; padding-bottom: 4px; }
+  .area-menu::-webkit-scrollbar { display: none; }
+  .area-voce { flex: 0 0 auto; }
+}
 .area-saluto { display: grid; gap: 12px; }
 .area-saluto .h-lg:focus { outline: none; } /* il focus programmatico serve agli screen reader, non all'occhio */
 .area-stats { display: flex; flex-wrap: wrap; gap: clamp(28px, 5vw, 72px); }
@@ -595,6 +622,54 @@ html.static .glifo { animation: none; }
 .area-mod .barra i { display: block; height: 100%; }
 .area-fc-slot { max-width: 560px; }
 .area-note { font-size: 12px; color: var(--ash); letter-spacing: 0.04em; }
+
+/* ================= SIMULATORE (interno, formato reale) ================= */
+.simu { z-index: 45; }
+.simu-timer { font-size: 20px; font-weight: var(--w-reg); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+.simu-timer.poco { color: var(--rosso); }
+.simu-corpo { display: grid; gap: clamp(26px, 4vw, 40px); max-width: 760px; padding-top: clamp(28px, 4vw, 44px); padding-bottom: 90px; position: relative; }
+.simu-quesito { font-size: clamp(20px, 2.4vw, 26px); font-weight: var(--w-reg); line-height: 1.4; letter-spacing: -0.01em; text-wrap: balance; }
+.simu-opz { display: grid; gap: 10px; }
+.simu-opt {
+  display: flex; gap: 14px; align-items: baseline; text-align: left;
+  background: rgba(34, 40, 69, 0.22); border: 0; border-radius: 16px;
+  font: inherit; font-weight: var(--w-thin); font-size: 16px; color: var(--mist);
+  cursor: pointer; padding: 14px 18px;
+  transition: background .2s ease, color .2s ease;
+}
+.simu-opt:hover { background: rgba(34, 40, 69, 0.45); color: var(--bone); }
+.simu-opt.scelta { background: rgba(28, 93, 165, 0.4); color: var(--bone); }
+.simu-opt .lettera { font-weight: var(--w-semi); font-size: 13px; color: var(--ash); }
+.simu-opt.scelta .lettera { color: #8ab6ff; }
+.simu-opt:focus-visible { outline: 2px solid var(--blu); outline-offset: 2px; }
+.simu-input {
+  background: rgba(34, 40, 69, 0.35); border: 0; border-radius: 16px;
+  padding: 14px 18px; font: inherit; font-weight: var(--w-thin); font-size: 17px;
+  color: var(--bone); width: min(340px, 100%);
+}
+.simu-input::placeholder { color: var(--ash); }
+.simu-input:focus-visible { outline: 2px solid var(--blu); }
+.simu-nav { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.simu-pallini { display: flex; gap: 8px; flex-wrap: wrap; }
+.simu-pallino {
+  width: 36px; height: 36px; border-radius: 12px;
+  background: rgba(34, 40, 69, 0.35); border: 0; cursor: pointer;
+  font: inherit; font-size: 13px; color: var(--ash);
+  font-variant-numeric: tabular-nums;
+  transition: background .2s ease, color .2s ease;
+}
+.simu-pallino.risposto { background: var(--blu-deep); color: var(--bone); }
+.simu-pallino.corrente { outline: 2px solid var(--blu); outline-offset: 1px; }
+.simu-esito-punti { font-size: clamp(64px, 9vw, 96px); font-weight: var(--w-reg); letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.simu-riga {
+  display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 12px;
+  font-size: 15px; color: var(--mist); align-items: baseline;
+}
+.simu-riga .esito-icona { font-weight: var(--w-semi); }
+.simu-riga.ok .esito-icona { color: #2ea3a3; }
+.simu-riga.no .esito-icona { color: var(--rosso); }
+.simu-riga.vuota .esito-icona { color: var(--ash); }
+.simu-riga .spiega { color: var(--ash); font-size: 13.5px; }
 
 /* ================= TESTIMONIANZE ================= */
 .quotes { position: relative; margin-top: clamp(40px, 6vw, 70px); min-height: 260px; }
@@ -752,7 +827,7 @@ footer { padding: 60px 0 40px; }
       <p class="body">Corsi di preparazione al <strong>semestre filtro di Medicina</strong> e ai test dell’area sanitaria. In presenza a Vibo Valentia e Lamezia Terme, oppure online — con un metodo costruito su di te.</p>
       <div class="hero-cta">
         <a class="pill" href="#contatti">Contattaci</a>
-        <a class="ghost" href="https://simulatore.agtest-elearning.it" target="_blank" rel="noopener">Simulatore online&nbsp;→</a>
+        <button class="ghost js-simu" style="border: 0; background: none; cursor: pointer; font: inherit;">Prova il simulatore&nbsp;→</button>
       </div>
     </div>
   </div>
@@ -1002,8 +1077,7 @@ footer { padding: 60px 0 40px; }
       </a>
       <div class="foot-links">
         <a href="#top" class="js-area">Area studenti</a>
-        <a href="https://simulatore.agtest-elearning.it" target="_blank" rel="noopener">Simulatore online</a>
-        <a href="https://www.iubenda.com/privacy-policy/71163171" target="_blank" rel="noopener">Privacy Policy</a>
+        <a href="#top" class="js-simu">Simulatore</a>
       </div>
     </div>
     <p class="concept-note">Concept di redesign — anteprima non ufficiale · agosto 2026</p>
@@ -1087,41 +1161,107 @@ footer { padding: 60px 0 40px; }
       </span>
     </div>
   </header>
-  <div class="wrap area-body">
-    <div class="area-saluto">
-      <p class="label">La tua giornata</p>
-      <h2 class="h-lg" id="area-saluto" tabindex="-1">Ciao, <span id="area-nome">Giulia</span>.</h2>
-      <p class="body" id="area-sub">Riprendiamo da dove avevi lasciato.</p>
+  <div class="wrap area-shell">
+    <nav class="area-menu" aria-label="Sezioni dell'area studenti">
+      <button class="area-voce on" data-vista="dash">Dashboard</button>
+      <button class="area-voce" data-vista="video">Videolezioni</button>
+      <button class="area-voce" data-vista="fc">Flashcard</button>
+      <button class="area-voce" data-vista="prog">I miei progressi</button>
+      <button class="area-voce" data-vista="simu">Simulatore</button>
+    </nav>
+    <div class="area-content">
+      <div class="area-vista" id="vista-dash">
+        <div class="area-saluto">
+          <p class="label">La tua giornata</p>
+          <h2 class="h-lg" id="area-saluto" tabindex="-1">Ciao, <span id="area-nome">Giulia</span>.</h2>
+          <p class="body" id="area-sub">Riprendiamo da dove avevi lasciato.</p>
+        </div>
+        <div class="area-stats">
+          <div class="area-stat"><span class="val" id="area-giorni">—</span><span class="cosa">giorni alla prova nazionale</span></div>
+          <div class="area-stat"><span class="val" id="area-carte"><em>14</em></span><span class="cosa">carte da ripassare oggi</span></div>
+          <div class="area-stat"><span class="val" id="area-ore">12,5</span><span class="cosa">ore di lezione guardate</span></div>
+        </div>
+        <div class="area-blocco">
+          <h3 class="h-xs">Continua a guardare</h3>
+          <div class="lez-scroll" id="area-continua" role="list" aria-label="Lezioni da riprendere"></div>
+          <p class="body" id="area-continua-vuoto" style="display: none;">Ancora nessuna lezione: quando i docenti caricheranno le prime videolezioni le troverai qui, pronte da riprendere dal punto esatto.</p>
+        </div>
+      </div>
+      <div class="area-vista" id="vista-video" hidden>
+        <h3 class="h-sm">Videolezioni</h3>
+        <div class="lez-rows" id="area-video-rows" style="margin-top: 0;"></div>
+        <p class="body" id="area-video-vuoto" style="display: none;">I docenti non hanno ancora caricato videolezioni: appena arriveranno le troverai qui, divise nei tre moduli.</p>
+      </div>
+      <div class="area-vista" id="vista-fc" hidden>
+        <h3 class="h-sm">Flashcard</h3>
+        <p class="lez-count" id="area-fc-sotto">Da ripassare oggi · Unità 7 · L'apoptosi</p>
+        <div class="area-fc-slot" id="area-fc-slot"></div>
+        <p class="body" id="area-fc-vuoto" style="display: none;">Nessuna carta da ripassare: i mazzi di flashcard arriveranno insieme alle prime lezioni.</p>
+      </div>
+      <div class="area-vista" id="vista-prog" hidden>
+        <h3 class="h-sm">I tuoi progressi</h3>
+        <p class="body" id="area-prog-riassunto"></p>
+        <div class="area-blocco">
+          <h3 class="h-xs">Moduli</h3>
+          <div class="area-moduli">
+            <div class="area-mod"><div class="riga"><b>Biologia</b><span>12 lezioni su 28 · 42%</span></div><div class="barra"><i style="width: 42%; background: #2ea3a3;"></i></div></div>
+            <div class="area-mod"><div class="riga"><b>Chimica</b><span>5 lezioni su 27 · 18%</span></div><div class="barra"><i style="width: 18%; background: #2f7fd6;"></i></div></div>
+            <div class="area-mod"><div class="riga"><b>Fisica</b><span>2 lezioni su 26 · 7%</span></div><div class="barra"><i style="width: 7%; background: #8ab6ff;"></i></div></div>
+          </div>
+        </div>
+      </div>
+      <p class="area-note">Anteprima dell'area studenti — dati dimostrativi del concept.</p>
     </div>
-    <div class="area-stats">
-      <div class="area-stat"><span class="val" id="area-giorni">—</span><span class="cosa">giorni alla prova nazionale</span></div>
-      <div class="area-stat"><span class="val" id="area-carte"><em>14</em></span><span class="cosa">carte da ripassare oggi</span></div>
-      <div class="area-stat"><span class="val" id="area-ore">12,5</span><span class="cosa">ore di lezione guardate</span></div>
+  </div>
+</div>
+
+<!-- ================= SIMULATORE ================= -->
+<div class="area simu" id="simu" hidden>
+  <header class="area-top">
+    <div class="wrap area-top-in">
+      <span class="logo" aria-hidden="true">
+        <svg width="22" height="20" viewBox="0 0 26 24" fill="none"><path d="M10 3 L19 21 L1 21 Z" stroke="#2f7fd6" stroke-width="1.6"/><path d="M16 3 L25 21 L7 21 Z" stroke="#ed4629" stroke-width="1.6"/></svg>
+        <span class="logo-word" style="font-size: 16px;">AG<em>test</em></span>
+      </span>
+      <span class="label label--quiet">Simulatore</span>
+      <span class="chi">
+        <span class="simu-timer" id="simu-timer" hidden>15:00</span>
+        <button class="ghost" id="simu-chiudi" style="border: 0; background: none; cursor: pointer; font: inherit;">Chiudi</button>
+      </span>
     </div>
-    <div class="area-blocco">
-      <h3 class="h-xs">Continua a guardare</h3>
-      <div class="lez-scroll" id="area-continua" role="list" aria-label="Lezioni da riprendere"></div>
-      <p class="body" id="area-continua-vuoto" style="display: none;">Ancora nessuna lezione: quando i docenti caricheranno le prime videolezioni le troverai qui, pronte da riprendere dal punto esatto.</p>
-    </div>
-    <div class="area-blocco">
-      <h3 class="h-xs">I tuoi moduli</h3>
-      <div class="area-moduli">
-        <div class="area-mod"><div class="riga"><b>Biologia</b><span>12 lezioni su 28 · 42%</span></div><div class="barra"><i style="width: 42%; background: #2ea3a3;"></i></div></div>
-        <div class="area-mod"><div class="riga"><b>Chimica</b><span>5 lezioni su 27 · 18%</span></div><div class="barra"><i style="width: 18%; background: #2f7fd6;"></i></div></div>
-        <div class="area-mod"><div class="riga"><b>Fisica</b><span>2 lezioni su 26 · 7%</span></div><div class="barra"><i style="width: 7%; background: #8ab6ff;"></i></div></div>
+  </header>
+  <div class="wrap simu-corpo">
+    <div class="area-vista" id="simu-intro">
+      <p class="label">Simulatore · Versione dimostrativa</p>
+      <h2 class="h-lg" id="simu-titolo" tabindex="-1">Il formato vero della prova.</h2>
+      <p class="body">Alla prova nazionale sono <strong>31 quesiti in 50 minuti</strong> per materia: 21 a risposta multipla con 5 alternative e 10 a completamento. Punteggio: <strong>+1</strong> risposta giusta, <strong>0</strong> omessa, <strong>−0,1</strong> sbagliata; si passa con 18.</p>
+      <p class="body">Questa demo usa lo stesso formato e lo stesso punteggio, in piccolo: <strong>10 quesiti di Biologia in 15 minuti</strong> (7 multiple + 3 completamento, dall'Unità 7 del syllabus).</p>
+      <div class="hero-cta">
+        <button class="pill" id="simu-inizia">Inizia la prova</button>
+        <button class="ghost" id="simu-annulla" style="border: 0; background: none; cursor: pointer; font: inherit;">Torna al sito</button>
       </div>
     </div>
-    <div class="area-blocco">
-      <h3 class="h-xs">Da ripassare oggi <span class="lez-count" id="area-fc-sotto">Unità 7 · L'apoptosi</span></h3>
-      <div class="area-fc-slot" id="area-fc-slot"></div>
-      <p class="body" id="area-fc-vuoto" style="display: none;">Nessuna carta da ripassare: i mazzi di flashcard arriveranno insieme alle prime lezioni.</p>
+    <div class="area-vista" id="simu-prova" hidden>
+      <p class="label label--quiet" id="simu-conta">Quesito 1 di 10 · Biologia</p>
+      <p class="simu-quesito" id="simu-testo"></p>
+      <div class="simu-opz" id="simu-opzioni"></div>
+      <div class="simu-nav">
+        <button class="ghost" id="simu-prec" style="border: 0; background: none; cursor: pointer; font: inherit;">‹&nbsp;Precedente</button>
+        <div class="simu-pallini" id="simu-pallini" role="group" aria-label="Vai al quesito"></div>
+        <button class="ghost" id="simu-succ" style="border: 0; background: none; cursor: pointer; font: inherit;">Successiva&nbsp;›</button>
+      </div>
+      <div><button class="pill" id="simu-consegna">Consegna</button></div>
     </div>
-    <div class="area-blocco">
-      <h3 class="h-xs">Allenati sul formato vero</h3>
-      <p class="body">31 quesiti in 50 minuti, come alla prova nazionale.</p>
-      <p><a class="ghost" href="https://simulatore.agtest-elearning.it" target="_blank" rel="noopener">Apri il simulatore&nbsp;→</a></p>
+    <div class="area-vista" id="simu-esito" hidden>
+      <p class="label">Esito della prova</p>
+      <p class="simu-esito-punti" id="simu-punti">0,0<span style="font-size: 0.35em; color: var(--ash);"> / 10</span></p>
+      <p class="body" id="simu-verdetto"></p>
+      <div class="area-blocco" id="simu-rivedi"></div>
+      <div class="hero-cta">
+        <button class="pill" id="simu-ripeti">Ripeti la prova</button>
+        <button class="ghost" id="simu-fine" style="border: 0; background: none; cursor: pointer; font: inherit;">Chiudi</button>
+      </div>
     </div>
-    <p class="area-note">Anteprima dell'area studenti — dati dimostrativi del concept.</p>
   </div>
 </div>
 
@@ -1556,6 +1696,35 @@ footer { padding: 60px 0 40px; }
       var barra = riga.querySelector('.barra i');
       if (barra) barra.style.width = d[2] + '%';
     });
+    /* videolezioni della vista dedicata */
+    var videoRows = document.getElementById('area-video-rows');
+    var videoVuoto = document.getElementById('area-video-vuoto');
+    if (videoRows) {
+      if (demo && videoRows.dataset.pronte !== 'si') {
+        videoRows.dataset.pronte = 'si';
+        MODULI.forEach(function (mod) {
+          var r = document.createElement('div');
+          r.className = 'lez-row';
+          r.innerHTML = '<div class="lez-row-top"><h3 class="h-xs"><span class="lez-dot" style="background:' + mod.tono + '" aria-hidden="true"></span>' + mod.nome + '</h3><span class="lez-count">' + mod.lezioni.length + ' lezioni</span></div>';
+          var nastro = document.createElement('div');
+          nastro.className = 'lez-scroll';
+          nastro.setAttribute('role', 'list');
+          nastro.setAttribute('aria-label', 'Lezioni di ' + mod.nome);
+          mod.lezioni.forEach(function (lez) { nastro.appendChild(creaCardLezione(mod, lez)); });
+          r.appendChild(nastro);
+          videoRows.appendChild(r);
+        });
+      }
+      videoRows.style.display = demo ? '' : 'none';
+    }
+    if (videoVuoto) videoVuoto.style.display = demo ? 'none' : '';
+    /* riassunto progressi */
+    var progR = document.getElementById('area-prog-riassunto');
+    if (progR) progR.textContent = demo
+      ? 'In totale: 12,5 ore di lezione guardate, 19 lezioni completate e 14 carte in coda per oggi.'
+      : 'Ancora nessun progresso registrato: parti da una videolezione o dal simulatore.';
+    /* si riparte sempre dalla dashboard */
+    if (typeof mostraVista === 'function') mostraVista('dash');
     /* flashcard: solo l'account demo ha il mazzo di prova */
     var slot = document.getElementById('area-fc-slot');
     var fcVuoto = document.getElementById('area-fc-vuoto');
@@ -1624,6 +1793,26 @@ footer { padding: 60px 0 40px; }
     };
     document.head.appendChild(gsi);
   }
+  /* menu laterale dell'area */
+  var mostraVista = function (quale) {
+    Array.prototype.forEach.call(areaBox.querySelectorAll('.area-vista'), function (v) {
+      v.hidden = v.id !== 'vista-' + quale;
+    });
+    Array.prototype.forEach.call(areaBox.querySelectorAll('.area-voce'), function (b) {
+      b.classList.toggle('on', b.dataset.vista === quale);
+    });
+  };
+  if (areaBox) {
+    Array.prototype.forEach.call(areaBox.querySelectorAll('.area-voce'), function (b) {
+      b.addEventListener('click', function () {
+        if (b.dataset.vista === 'simu') {
+          if (typeof apriSimu === 'function') apriSimu(b);
+          return;
+        }
+        mostraVista(b.dataset.vista);
+      });
+    });
+  }
   if (areaBox) {
     var bg = document.getElementById('login-google');
     var be = document.getElementById('login-demo');
@@ -1677,6 +1866,194 @@ footer { padding: 60px 0 40px; }
     };
     if (vaiArea) vaiArea.addEventListener('click', dalPlayer);
     if (playArea) playArea.addEventListener('click', dalPlayer);
+  }
+
+  /* ============ SIMULATORE — formato reale della prova, in piccolo ============ */
+  var SIMU_QUESITI = [
+    { tipo: 'm', q: 'Quale sequenza descrive correttamente la via intrinseca dell\u2019apoptosi?',
+      opzioni: ['Recettore di morte \u2192 FADD \u2192 caspasi-8', 'Danno interno \u2192 BAX/BAK \u2192 citocromo c \u2192 apoptosoma \u2192 caspasi-9', 'Perforina \u2192 granzimi \u2192 caspasi-3', 'p53 \u2192 riparazione del DNA \u2192 sopravvivenza', 'TNF \u2192 NF-\u03baB \u2192 proliferazione'],
+      giusta: 1, spiega: 'La via intrinseca parte dal mitocondrio: BAX/BAK aprono i pori, esce il citocromo c, si forma l\u2019apoptosoma che attiva la caspasi-9.' },
+    { tipo: 'm', q: 'Nel citoplasma, il citocromo c si lega ad APAF-1 e forma:',
+      opzioni: ['il proteasoma', 'l\u2019apoptosoma', 'il DISC', 'l\u2019inflammasoma', 'il ribosoma'],
+      giusta: 1, spiega: 'Citocromo c + APAF-1 = apoptosoma, la piattaforma che attiva la caspasi-9.' },
+    { tipo: 'm', q: 'Quale forma di morte cellulare provoca infiammazione?',
+      opzioni: ['Apoptosi', 'Efferocitosi', 'Necrosi', 'Autofagia', 'Mitosi'],
+      giusta: 2, spiega: 'La necrosi rompe la cellula e ne riversa il contenuto; l\u2019apoptosi impacchetta tutto in corpi apoptotici.' },
+    { tipo: 'm', q: 'p53 \u00e8 detto \u00abguardiano del genoma\u00bb perch\u00e9:',
+      opzioni: ['ripara direttamente il DNA', 'blocca sempre l\u2019apoptosi', 'ferma il ciclo cellulare e, se il danno \u00e8 irreparabile, avvia l\u2019apoptosi', 'attiva la mitosi nelle cellule danneggiate', 'degrada le caspasi'],
+      giusta: 2, spiega: 'p53 controlla l\u2019integrit\u00e0 del DNA: arresto del ciclo, e apoptosi se il danno non si pu\u00f2 riparare.' },
+    { tipo: 'm', q: 'Le caspasi esecutrici sono:',
+      opzioni: ['8, 9 e 10', '3, 6 e 7', '1, 4 e 5', '2 e 12', 'tutte le caspasi'],
+      giusta: 1, spiega: 'Iniziatrici: 8, 9, 10. Esecutrici: 3, 6, 7 \u2014 quelle che smontano la cellula.' },
+    { tipo: 'm', q: 'BAX e BAK appartengono alla famiglia:',
+      opzioni: ['delle cicline', 'BCL-2', 'delle chinasi CDK', 'delle IAP', 'dei recettori di morte'],
+      giusta: 1, spiega: 'Sono gli \u00abesecutori\u00bb della famiglia BCL-2: aprono i pori sulla membrana mitocondriale esterna.' },
+    { tipo: 'm', q: 'La separazione delle dita nel feto avviene per:',
+      opzioni: ['necrosi', 'apoptosi delle membrane interdigitali', 'piroptosi', 'mitosi asimmetrica', 'autofagia'],
+      giusta: 1, spiega: 'Le cellule fra le dita muoiono in modo programmato mentre le dita crescono.' },
+    { tipo: 'c', q: 'Le caspasi 8, 9 e 10, che ricevono e amplificano il segnale di morte, sono dette caspasi ________.',
+      risposta: 'iniziatrici', spiega: 'Ricevono il segnale (dalle vie estrinseca o intrinseca) e attivano le esecutrici.' },
+    { tipo: 'c', q: 'I frammenti della cellula in apoptosi, racchiusi in vescicole di membrana, si chiamano corpi ________.',
+      risposta: 'apoptotici', spiega: 'I corpi apoptotici vengono poi ripuliti dai macrofagi (efferocitosi).' },
+    { tipo: 'c', q: 'La via ________ dell\u2019apoptosi parte dai recettori di morte sulla membrana.',
+      risposta: 'estrinseca', spiega: 'Estrinseca = segnale esterno sui recettori di morte; intrinseca = danno interno, via mitocondrio.' }
+  ];
+  var SIMU_MINUTI = 15;
+  var simuBox = document.getElementById('simu');
+  var apriSimu = null;
+  if (simuBox) {
+    var simuOpener = null, simuRisposte = [], simuCorrente = 0, simuSecondi = 0, simuTic = null, simuInCorso = false;
+    var sq = function (id) { return document.getElementById(id); };
+    var simuVista = function (quale) {
+      ['simu-intro', 'simu-prova', 'simu-esito'].forEach(function (v) { sq(v).hidden = v !== quale; });
+    };
+    apriSimu = function (opener) {
+      simuOpener = opener || null;
+      simuBox.hidden = false;
+      document.body.style.overflow = 'hidden';
+      simuVista('simu-intro');
+      sq('simu-timer').hidden = true;
+      simuBox.scrollTop = 0;
+      sq('simu-titolo').focus({ preventScroll: true });
+    };
+    var chiudiSimu = function () {
+      if (simuTic) { clearInterval(simuTic); simuTic = null; }
+      simuInCorso = false;
+      simuBox.hidden = true;
+      /* se sotto c'e' l'area aperta, lo scorrimento resta bloccato per lei */
+      document.body.style.overflow = (areaBox && !areaBox.hidden) ? 'hidden' : '';
+      if (simuOpener) simuOpener.focus({ preventScroll: true });
+    };
+    var formattaTempo = function (sec) {
+      var m = Math.floor(sec / 60), ss = sec % 60;
+      return m + ':' + (ss < 10 ? '0' : '') + ss;
+    };
+    var mostraQuesito = function (i) {
+      simuCorrente = i;
+      var qz = SIMU_QUESITI[i];
+      sq('simu-conta').textContent = 'Quesito ' + (i + 1) + ' di ' + SIMU_QUESITI.length + ' · Biologia · ' + (qz.tipo === 'm' ? 'risposta multipla' : 'completamento');
+      sq('simu-testo').textContent = qz.q;
+      var box = sq('simu-opzioni');
+      box.innerHTML = '';
+      if (qz.tipo === 'm') {
+        qz.opzioni.forEach(function (opt, oi) {
+          var b = document.createElement('button');
+          b.className = 'simu-opt' + (simuRisposte[i] === oi ? ' scelta' : '');
+          b.innerHTML = '<span class="lettera">' + 'ABCDE'[oi] + '</span><span>' + opt + '</span>';
+          b.addEventListener('click', function () {
+            simuRisposte[i] = (simuRisposte[i] === oi) ? null : oi; /* ricliccare = omettere */
+            mostraQuesito(i);
+            aggiornaPallini();
+          });
+          box.appendChild(b);
+        });
+      } else {
+        var inp = document.createElement('input');
+        inp.className = 'simu-input';
+        inp.type = 'text';
+        inp.placeholder = 'Scrivi la parola esatta…';
+        inp.autocomplete = 'off';
+        inp.value = simuRisposte[i] || '';
+        inp.addEventListener('input', function () {
+          simuRisposte[i] = inp.value;
+          aggiornaPallini();
+        });
+        box.appendChild(inp);
+      }
+      aggiornaPallini();
+    };
+    var rispostaData = function (i) {
+      var r = simuRisposte[i];
+      return !(r === null || r === undefined || (typeof r === 'string' && !r.trim()));
+    };
+    var aggiornaPallini = function () {
+      var box = sq('simu-pallini');
+      box.innerHTML = '';
+      SIMU_QUESITI.forEach(function (_, i) {
+        var b = document.createElement('button');
+        b.className = 'simu-pallino' + (rispostaData(i) ? ' risposto' : '') + (i === simuCorrente ? ' corrente' : '');
+        b.textContent = i + 1;
+        b.setAttribute('aria-label', 'Vai al quesito ' + (i + 1) + (rispostaData(i) ? ' (risposto)' : ' (in bianco)'));
+        b.addEventListener('click', function () { mostraQuesito(i); });
+        box.appendChild(b);
+      });
+    };
+    var iniziaProva = function () {
+      simuRisposte = SIMU_QUESITI.map(function () { return null; });
+      simuSecondi = SIMU_MINUTI * 60;
+      simuInCorso = true;
+      simuVista('simu-prova');
+      var timer = sq('simu-timer');
+      timer.hidden = false;
+      timer.classList.remove('poco');
+      timer.textContent = formattaTempo(simuSecondi);
+      if (simuTic) clearInterval(simuTic);
+      simuTic = setInterval(function () {
+        simuSecondi--;
+        timer.textContent = formattaTempo(Math.max(0, simuSecondi));
+        if (simuSecondi <= 120) timer.classList.add('poco');
+        if (simuSecondi <= 0) consegna(true);
+      }, 1000);
+      mostraQuesito(0);
+    };
+    var normalizza = function (t) {
+      return (t || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    };
+    var consegna = function (perTempo) {
+      if (!simuInCorso) return;
+      if (!perTempo) {
+        var bianche = SIMU_QUESITI.filter(function (_, i) { return !rispostaData(i); }).length;
+        if (bianche > 0 && !window.confirm('Hai ' + bianche + ' quesiti in bianco (valgono 0 punti). Consegnare comunque?')) return;
+      }
+      simuInCorso = false;
+      if (simuTic) { clearInterval(simuTic); simuTic = null; }
+      sq('simu-timer').hidden = true;
+      var punti = 0;
+      var righe = [];
+      SIMU_QUESITI.forEach(function (qz, i) {
+        var data = rispostaData(i);
+        var giusta = false;
+        var rispostaTesto = '—';
+        if (data) {
+          if (qz.tipo === 'm') {
+            giusta = simuRisposte[i] === qz.giusta;
+            rispostaTesto = qz.opzioni[simuRisposte[i]];
+          } else {
+            giusta = normalizza(simuRisposte[i]) === normalizza(qz.risposta);
+            rispostaTesto = simuRisposte[i];
+          }
+          punti += giusta ? 1 : -0.1;
+        }
+        var attesa = qz.tipo === 'm' ? qz.opzioni[qz.giusta] : qz.risposta;
+        righe.push('<div class="simu-riga ' + (data ? (giusta ? 'ok' : 'no') : 'vuota') + '">' +
+          '<span class="esito-icona">' + (data ? (giusta ? '\u2713' : '\u2717') : '\u2013') + '</span>' +
+          '<span><strong style="font-weight: var(--w-reg); color: var(--bone);">' + (i + 1) + '.</strong> ' + qz.q +
+          '<br>' + (giusta ? 'Giusta: ' + attesa : (data ? 'La tua: ' + rispostaTesto + ' · Giusta: ' + attesa : 'In bianco · Giusta: ' + attesa)) +
+          '<br><span class="spiega">' + qz.spiega + '</span></span></div>');
+      });
+      punti = Math.round(punti * 10) / 10;
+      sq('simu-punti').innerHTML = String(punti).replace('.', ',') + '<span style="font-size: 0.35em; color: var(--ash);"> / ' + SIMU_QUESITI.length + '</span>';
+      sq('simu-verdetto').textContent = (perTempo ? 'Tempo scaduto — consegna automatica. ' : '') +
+        'Il punteggio usa le regole vere: +1 giusta, 0 omessa, \u22120,1 sbagliata. Alla prova nazionale i quesiti sono 31 e si passa con 18.';
+      sq('simu-rivedi').innerHTML = '<h3 class="h-xs">Rivedi i quesiti</h3>' + righe.join('');
+      simuVista('simu-esito');
+      simuBox.scrollTop = 0;
+    };
+    sq('simu-inizia').addEventListener('click', iniziaProva);
+    sq('simu-ripeti').addEventListener('click', iniziaProva);
+    sq('simu-annulla').addEventListener('click', chiudiSimu);
+    sq('simu-fine').addEventListener('click', chiudiSimu);
+    sq('simu-chiudi').addEventListener('click', function () {
+      if (simuInCorso && !window.confirm('La prova \u00e8 in corso: uscire senza consegnare?')) return;
+      chiudiSimu();
+    });
+    sq('simu-prec').addEventListener('click', function () { if (simuCorrente > 0) mostraQuesito(simuCorrente - 1); });
+    sq('simu-succ').addEventListener('click', function () { if (simuCorrente < SIMU_QUESITI.length - 1) mostraQuesito(simuCorrente + 1); });
+    sq('simu-consegna').addEventListener('click', function () { consegna(false); });
+    /* tutti i pulsanti "simulatore" del sito aprono QUESTO simulatore */
+    Array.prototype.forEach.call(document.querySelectorAll('.js-simu'), function (el) {
+      el.addEventListener('click', function (e) { e.preventDefault(); apriSimu(el); });
+    });
   }
 
   /* ============ RITRATTI TEAM — costellazione di triangoli ============ */
