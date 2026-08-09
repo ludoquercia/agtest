@@ -500,6 +500,49 @@ html.static .glifo { animation: none; }
   .lez-player-box { padding: 18px 18px 24px; }
 }
 
+/* ================= FLASHCARD DELL'AREA (sistema completo stile MedOs) ================= */
+.afc-testa { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.afc-azioni { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.afc-ghostbtn { border: 0; background: none; cursor: pointer; font: inherit; }
+.afc-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.afc-pann { display: grid; gap: 18px; align-content: start; }
+.afc-pann[hidden] { display: none; }
+.afc-mazzo-riga { display: flex; align-items: center; gap: 14px; padding: 16px 0; border-top: 1px solid rgba(34, 40, 69, 0.7); flex-wrap: wrap; }
+.afc-dot { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; }
+.afc-mazzo-info { flex: 1; min-width: 180px; display: grid; gap: 2px; }
+.afc-mazzo-nome { font-size: 17px; font-weight: var(--w-reg); }
+.afc-mazzo-meta { font-size: 13px; color: var(--ash); font-variant-numeric: tabular-nums; }
+.afc-mazzo-meta .dovute { color: var(--rosso); font-weight: var(--w-semi); }
+.afc-carte-lista { display: grid; gap: 8px; padding: 2px 0 16px 24px; }
+.afc-carta-riga { display: flex; gap: 12px; align-items: baseline; font-size: 14px; color: var(--mist); background: rgba(34, 40, 69, 0.18); border-radius: 12px; padding: 10px 14px; }
+.afc-carta-riga .davanti { min-width: 0; flex: 1; }
+.afc-carta-riga .retro { color: var(--ash); font-size: 12.5px; display: block; }
+.afc-x { border: 0; background: none; color: var(--ash); cursor: pointer; font: inherit; padding: 2px 8px; border-radius: 8px; }
+.afc-x:hover { color: var(--rosso); }
+.afc-vuotopann { display: grid; gap: 12px; justify-items: start; padding: 10px 0 4px; }
+.afc-campo { background: rgba(34, 40, 69, 0.35); border: 0; border-radius: 14px; padding: 12px 16px; font: inherit; font-weight: var(--w-thin); font-size: 15px; color: var(--bone); width: 100%; }
+.afc-campo::placeholder { color: var(--ash); }
+.afc-campo:focus-visible { outline: 2px solid var(--blu); }
+textarea.afc-campo { resize: vertical; min-height: 72px; }
+select.afc-campo { cursor: pointer; }
+select.afc-campo option { background: #10131f; color: var(--bone); }
+.afc-colori { display: flex; gap: 12px; }
+.afc-colore { width: 26px; height: 26px; border-radius: 50%; border: 0; cursor: pointer; }
+.afc-colore.on { outline: 2px solid var(--bone); outline-offset: 3px; }
+.afc-etich { font-size: 12px; font-weight: var(--w-semi); letter-spacing: .1em; text-transform: uppercase; color: var(--ash); }
+#afc-studio { max-width: 560px; }
+.afc-prog-griglia { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 36px); align-items: start; }
+@media (max-width: 760px) { .afc-prog-griglia { grid-template-columns: 1fr; } }
+.afc-curva svg, .afc-sapometro svg { width: 100%; height: auto; display: block; }
+.afc-sapometro { display: grid; gap: 12px; }
+.afc-sap-centro { text-align: center; margin-top: -58px; position: relative; z-index: 1; }
+.afc-sap-punti { font-size: 44px; font-weight: var(--w-reg); letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+.afc-sap-label { font-size: 12px; color: var(--ash); text-transform: uppercase; letter-spacing: .1em; font-weight: var(--w-semi); }
+.afc-sotto3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.afc-sm { text-align: center; background: rgba(34, 40, 69, 0.25); border-radius: 16px; padding: 12px 6px; display: grid; gap: 3px; }
+.afc-sm b { font-size: 18px; font-weight: var(--w-reg); font-variant-numeric: tabular-nums; }
+.afc-sm span { font-size: 10.5px; color: var(--ash); text-transform: uppercase; letter-spacing: .08em; }
+
 /* ================= MODAL ACCESSO (Area studenti) ================= */
 .login-overlay {
   position: fixed; inset: 0; z-index: 50;
@@ -1145,6 +1188,44 @@ footer { padding: 60px 0 40px; }
   </div>
 </div>
 
+<!-- ================= MODALI FLASHCARD ================= -->
+<div class="login-overlay" id="afc-modal-mazzo" hidden>
+  <div class="login-box" role="dialog" aria-modal="true" aria-labelledby="afc-mm-t">
+    <button class="login-close afc-modal-x" aria-label="Chiudi">×</button>
+    <h2 class="h-xs" id="afc-mm-t">Crea nuovo mazzo</h2>
+    <label class="afc-etich" for="afc-mm-nome">Nome del mazzo</label>
+    <input class="afc-campo" id="afc-mm-nome" placeholder="es. Anatomia, Chimica organica…">
+    <span class="afc-etich">Colore</span>
+    <div class="afc-colori" id="afc-mm-colori"></div>
+    <button class="pill" id="afc-mm-crea">Crea mazzo</button>
+  </div>
+</div>
+<div class="login-overlay" id="afc-modal-carta" hidden>
+  <div class="login-box" role="dialog" aria-modal="true" aria-labelledby="afc-mc-t">
+    <button class="login-close afc-modal-x" aria-label="Chiudi">×</button>
+    <h2 class="h-xs" id="afc-mc-t">Nuova flashcard</h2>
+    <label class="afc-etich" for="afc-mc-mazzo">Mazzo</label>
+    <select class="afc-campo" id="afc-mc-mazzo"></select>
+    <label class="afc-etich" for="afc-mc-fronte">Domanda (fronte)</label>
+    <textarea class="afc-campo" id="afc-mc-fronte" placeholder="Scrivi la domanda…"></textarea>
+    <label class="afc-etich" for="afc-mc-retro">Risposta (retro)</label>
+    <textarea class="afc-campo" id="afc-mc-retro" placeholder="Scrivi la risposta…"></textarea>
+    <button class="pill" id="afc-mc-crea">Crea flashcard</button>
+  </div>
+</div>
+<div class="login-overlay" id="afc-modal-importa" hidden>
+  <div class="login-box" role="dialog" aria-modal="true" aria-labelledby="afc-mi-t" style="width: min(460px, 100%);">
+    <button class="login-close afc-modal-x" aria-label="Chiudi">×</button>
+    <h2 class="h-xs" id="afc-mi-t">Importa da testo</h2>
+    <p class="login-note" style="max-width: none;">Incolla l'output di un'AI o i tuoi appunti: vengono riconosciute le coppie FRONTE: / RETRO: (e varianti come Domanda/Risposta, Q/A).</p>
+    <label class="afc-etich" for="afc-mi-mazzo">Mazzo di destinazione</label>
+    <select class="afc-campo" id="afc-mi-mazzo"></select>
+    <textarea class="afc-campo" id="afc-mi-testo" style="min-height: 130px; font-size: 13px;" placeholder="FRONTE: che cos'è…&#10;RETRO: è…"></textarea>
+    <p class="login-note" id="afc-mi-conta" style="margin: 0;">Nessuna flashcard riconosciuta finora.</p>
+    <button class="pill" id="afc-mi-vai">Importa</button>
+  </div>
+</div>
+
 <!-- ================= AREA STUDENTI (pagina interna) ================= -->
 <div class="area" id="area" hidden>
   <header class="area-top">
@@ -1193,10 +1274,57 @@ footer { padding: 60px 0 40px; }
         <p class="body" id="area-video-vuoto" style="display: none;">I docenti non hanno ancora caricato videolezioni: appena arriveranno le troverai qui, divise nei tre moduli.</p>
       </div>
       <div class="area-vista" id="vista-fc" hidden>
-        <h3 class="h-sm">Flashcard</h3>
-        <p class="lez-count" id="area-fc-sotto">Da ripassare oggi · Unità 7 · L'apoptosi</p>
-        <div class="area-fc-slot" id="area-fc-slot"></div>
-        <p class="body" id="area-fc-vuoto" style="display: none;">Nessuna carta da ripassare: i mazzi di flashcard arriveranno insieme alle prime lezioni.</p>
+        <div class="afc-testa">
+          <div>
+            <h3 class="h-sm">Flashcard</h3>
+            <p class="lez-count" id="afc-sotto">—</p>
+          </div>
+          <div class="afc-azioni">
+            <button class="ghost afc-ghostbtn" id="afc-importa-apri">Importa da testo</button>
+            <button class="ghost afc-ghostbtn" id="afc-carta-apri">Nuova carta</button>
+            <button class="pill" id="afc-mazzo-apri">Crea mazzo</button>
+          </div>
+        </div>
+        <div class="afc-tabs">
+          <button class="area-voce on" data-afctab="mazzi">I miei mazzi</button>
+          <button class="area-voce" data-afctab="oggi">Studia oggi<span id="afc-oggi-n"></span></button>
+          <button class="area-voce" data-afctab="prog">Progressi</button>
+        </div>
+        <div class="afc-pann" id="afc-mazzi"></div>
+        <div class="afc-pann" id="afc-oggi" hidden></div>
+        <div class="afc-pann" id="afc-prog" hidden></div>
+        <div class="afc-pann" id="afc-studio" hidden>
+          <div class="fc-meta"><span id="afc-st-conta">1 / 1</span><span id="afc-st-mazzo"></span></div>
+          <div class="fc-bar" aria-hidden="true"><span id="afc-st-bar"></span></div>
+          <div class="fc-scene">
+            <div class="fc-card" id="afc-st-card" tabindex="0" role="button">
+              <div class="fc-face" id="afc-st-front">
+                <p class="fc-tag">Domanda</p>
+                <p class="fc-text" id="afc-st-q"></p>
+                <p class="fc-hint">Tocca o clicca per la risposta</p>
+              </div>
+              <div class="fc-face fc-face--back" id="afc-st-back" aria-hidden="true">
+                <p class="fc-tag">Risposta</p>
+                <p class="fc-text" id="afc-st-a"></p>
+                <p class="fc-hint">Tocca o clicca per la domanda</p>
+              </div>
+            </div>
+          </div>
+          <div class="fc-done" id="afc-st-done">
+            <p class="h-xs">Sessione <span style="color: var(--rosso);">completata</span>.</p>
+            <p id="afc-st-riass"></p>
+            <button class="ghost afc-ghostbtn" id="afc-st-torna">Torna ai mazzi&nbsp;↺</button>
+          </div>
+          <div class="fc-actions" id="afc-st-actions">
+            <button class="pill" id="afc-st-mostra">Mostra risposta</button>
+            <div class="fc-ratings" id="afc-st-ratings" hidden>
+              <button class="fc-rate" data-r="0"><i style="background: #ed4629;"></i>Di nuovo</button>
+              <button class="fc-rate" data-r="2"><i style="background: #e6a15e;"></i>Difficile</button>
+              <button class="fc-rate" data-r="4"><i style="background: #2ea3a3;"></i>Buono</button>
+              <button class="fc-rate" data-r="5"><i style="background: #2f7fd6;"></i>Facile</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="area-vista" id="vista-prog" hidden>
         <h3 class="h-sm">I tuoi progressi</h3>
@@ -1725,21 +1853,8 @@ footer { padding: 60px 0 40px; }
       : 'Ancora nessun progresso registrato: parti da una videolezione o dal simulatore.';
     /* si riparte sempre dalla dashboard */
     if (typeof mostraVista === 'function') mostraVista('dash');
-    /* flashcard: solo l'account demo ha il mazzo di prova */
-    var slot = document.getElementById('area-fc-slot');
-    var fcVuoto = document.getElementById('area-fc-vuoto');
-    var fcSotto = document.getElementById('area-fc-sotto');
-    if (demo) {
-      if (fcDemoNodo && slot && fcDemoNodo.parentElement !== slot) slot.appendChild(fcDemoNodo);
-      if (slot) slot.style.display = '';
-      if (fcVuoto) fcVuoto.style.display = 'none';
-      if (fcSotto) fcSotto.style.display = '';
-    } else {
-      if (fcDemoNodo && fcDemoCasa && fcDemoNodo.parentElement !== fcDemoCasa) fcDemoCasa.appendChild(fcDemoNodo);
-      if (slot) slot.style.display = 'none';
-      if (fcVuoto) fcVuoto.style.display = '';
-      if (fcSotto) fcSotto.style.display = 'none';
-    }
+    /* flashcard: sistema completo (mazzi, studio, progressi) con memoria per account */
+    if (typeof afcEntra === 'function') afcEntra(demo);
     areaBox.hidden = false;
     document.body.style.overflow = 'hidden';
     areaBox.scrollTop = 0;
@@ -1795,15 +1910,16 @@ footer { padding: 60px 0 40px; }
   }
   /* menu laterale dell'area */
   var mostraVista = function (quale) {
-    Array.prototype.forEach.call(areaBox.querySelectorAll('.area-vista'), function (v) {
+    Array.prototype.forEach.call(areaBox.querySelectorAll('.area-content > .area-vista'), function (v) {
       v.hidden = v.id !== 'vista-' + quale;
     });
-    Array.prototype.forEach.call(areaBox.querySelectorAll('.area-voce'), function (b) {
+    /* solo le voci del menu laterale: i tab interni delle flashcard hanno la stessa classe */
+    Array.prototype.forEach.call(areaBox.querySelectorAll('.area-menu .area-voce'), function (b) {
       b.classList.toggle('on', b.dataset.vista === quale);
     });
   };
   if (areaBox) {
-    Array.prototype.forEach.call(areaBox.querySelectorAll('.area-voce'), function (b) {
+    Array.prototype.forEach.call(areaBox.querySelectorAll('.area-menu .area-voce'), function (b) {
       b.addEventListener('click', function () {
         if (b.dataset.vista === 'simu') {
           if (typeof apriSimu === 'function') apriSimu(b);
@@ -1866,6 +1982,502 @@ footer { padding: 60px 0 40px; }
     };
     if (vaiArea) vaiArea.addEventListener('click', dalPlayer);
     if (playArea) playArea.addEventListener('click', dalPlayer);
+  }
+
+  /* ============ FLASHCARD DELL'AREA — sistema completo stile MedOs ============
+     Mazzi, carte, ripetizione spaziata (SM-2 semplificato), storico delle review e
+     pannello progressi (curva del sapere + sapometro con precisione/costanza/trend).
+     Tutto salvato in localStorage, con spazi separati per account demo e reale. */
+  var AFC_COLORI = ['#2ea3a3', '#2f7fd6', '#8ab6ff', '#e6a15e', '#ed4629'];
+  var afcDemo = false;
+  var afcDati = null;
+  var afcMazzoAperto = null;
+  var afcChiave = function () { return 'agtest-fc-' + (afcDemo ? 'demo' : 'reale'); };
+  var afcCarica = function () {
+    try { var raw = localStorage.getItem(afcChiave()); if (raw) return JSON.parse(raw); } catch (err) {}
+    return null;
+  };
+  var afcSalva = function () {
+    try { localStorage.setItem(afcChiave(), JSON.stringify(afcDati)); } catch (err) {}
+  };
+  var afcId = function () { return 'c' + Math.random().toString(36).slice(2, 10); };
+  var GIORNO_MS = 86400000;
+  var afcOggi = function () { var d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime(); };
+  var afcDovuta = function (carta) { return !carta.next || carta.next <= afcOggi() + GIORNO_MS - 1; };
+  var afcDovuteMazzo = function (m) { return m.carte.filter(afcDovuta).length; };
+  var afcDovute = function () {
+    if (!afcDati) return 0;
+    return afcDati.mazzi.reduce(function (t, m) { return t + afcDovuteMazzo(m); }, 0);
+  };
+  /* SM-2 semplificato, con le stesse valutazioni di MedOs (0/2/4/5) */
+  var afcProgramma = function (carta, r) {
+    if (r === 0) { carta.reps = 0; carta.int = 0; carta.next = afcOggi(); return; }
+    carta.ef = Math.min(2.7, Math.max(1.3, (carta.ef || 2.3) + (r === 5 ? 0.1 : r === 4 ? 0 : -0.15)));
+    if (r === 2) carta.int = Math.max(1, Math.round((carta.int || 1) * 1.2));
+    else if (carta.reps === 0) carta.int = r === 5 ? 2 : 1;
+    else if (carta.reps === 1) carta.int = r === 5 ? 4 : 3;
+    else carta.int = Math.round((carta.int || 1) * carta.ef * (r === 5 ? 1.3 : 1));
+    carta.reps = (carta.reps || 0) + 1;
+    carta.next = afcOggi() + carta.int * GIORNO_MS;
+  };
+  var afcSeedDemo = function () {
+    var oggi = afcOggi();
+    var mazzi = [
+      { id: afcId(), nome: "L'apoptosi · Unità 7", colore: '#2ea3a3', carte: [] },
+      { id: afcId(), nome: 'Il ciclo cellulare', colore: '#2f7fd6', carte: [] }
+    ];
+    FC_CARDS.forEach(function (c) {
+      mazzi[0].carte.push({ id: afcId(), fronte: c.q, retro: c.a, reps: 2, ef: 2.3, int: 4, next: oggi });
+    });
+    [
+      { fronte: 'Quali sono le fasi del ciclo cellulare?', retro: '<strong>G1 → S → G2 → M</strong>, più lo stato di quiete G0. In S si duplica il DNA, in M la cellula si divide.' },
+      { fronte: 'Che cosa succede al punto di restrizione?', retro: 'La cellula decide se impegnarsi nella divisione: <strong>Rb</strong> libera <strong>E2F</strong> solo se i segnali mitogeni bastano.' },
+      { fronte: 'Chi guida il passaggio fra le fasi del ciclo?', retro: 'I complessi <strong>ciclina–CDK</strong>: le cicline salgono e scendono, le CDK si attivano solo in coppia.' },
+      { fronte: 'Che cosa fanno p21 e p27?', retro: 'Sono <strong>inibitori delle CDK</strong>: fermano il ciclo quando p53 rileva un danno al DNA.' }
+    ].forEach(function (c, i) {
+      mazzi[1].carte.push({ id: afcId(), fronte: c.fronte, retro: c.retro, reps: i < 2 ? 1 : 0, ef: 2.3, int: i < 2 ? 3 : 0, next: i < 2 ? oggi + 2 * GIORNO_MS : oggi });
+    });
+    /* storico realistico: 10 giorni di studio negli ultimi 12, di fila negli ultimi 5 */
+    var reviews = [];
+    var giorni = [12, 11, 10, 9, 7, 5, 4, 3, 2, 1];
+    giorni.forEach(function (fa, gi) {
+      var quante = 4 + (gi % 4);
+      for (var k = 0; k < quante; k++) {
+        var tutte = mazzi[0].carte.concat(mazzi[1].carte);
+        var carta = tutte[(gi * 3 + k * 5) % tutte.length];
+        var voto = (k === 0 && gi % 3 === 0) ? 2 : (k === 1 && gi === 4) ? 0 : (k % 3 === 2) ? 5 : 4;
+        reviews.push({ c: carta.id, r: voto, t: oggi - fa * GIORNO_MS + 36000000 + k * 600000 });
+      }
+    });
+    return { mazzi: mazzi, reviews: reviews };
+  };
+  var afcPulisci = function (t) {
+    var div = document.createElement('div');
+    div.textContent = t || '';
+    return div.innerHTML;
+  };
+  var afcTesto = function (html) {
+    var div = document.createElement('div');
+    div.innerHTML = html || '';
+    return div.textContent;
+  };
+  var sfc = function (id) { return document.getElementById(id); };
+  var afcTab = function (quale) {
+    ['mazzi', 'oggi', 'prog'].forEach(function (t) {
+      sfc('afc-' + t).hidden = t !== quale;
+    });
+    sfc('afc-studio').hidden = true;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-afctab]'), function (b) {
+      b.classList.toggle('on', b.dataset.afctab === quale);
+    });
+    if (quale === 'prog') afcRenderProg();
+  };
+  var afcContatori = function () {
+    var n = afcDovute();
+    sfc('afc-sotto').textContent = n > 0 ? n + (n === 1 ? ' carta da ripassare oggi' : ' carte da ripassare oggi') : 'Nessuna carta in scadenza oggi';
+    sfc('afc-oggi-n').textContent = n > 0 ? ' (' + n + ')' : '';
+    var stat = document.getElementById('area-carte');
+    if (stat) stat.innerHTML = n > 0 ? '<em>' + n + '</em>' : '0';
+  };
+  var afcRenderMazzi = function () {
+    var box = sfc('afc-mazzi');
+    box.innerHTML = '';
+    if (!afcDati.mazzi.length) {
+      box.innerHTML = '<div class="afc-vuotopann"><p class="body">Nessun mazzo ancora. Crea il tuo primo mazzo per iniziare a studiare con le flashcard.</p></div>';
+      var b = document.createElement('button');
+      b.className = 'pill';
+      b.textContent = 'Crea il primo mazzo';
+      b.addEventListener('click', function () { afcApriModal('afc-modal-mazzo'); });
+      box.firstChild.appendChild(b);
+      return;
+    }
+    afcDati.mazzi.forEach(function (m) {
+      var dovute = afcDovuteMazzo(m);
+      var riga = document.createElement('div');
+      riga.className = 'afc-mazzo-riga';
+      riga.innerHTML = '<span class="afc-dot" style="background: ' + m.colore + ';" aria-hidden="true"></span>' +
+        '<span class="afc-mazzo-info"><span class="afc-mazzo-nome">' + afcPulisci(afcTesto(m.nome)) + '</span>' +
+        '<span class="afc-mazzo-meta">' + m.carte.length + (m.carte.length === 1 ? ' carta' : ' carte') +
+        (dovute > 0 ? ' · <span class="dovute">' + dovute + ' da ripassare</span>' : '') + '</span></span>';
+      if (dovute > 0) {
+        var st = document.createElement('button');
+        st.className = 'pill';
+        st.style.padding = '11px 20px';
+        st.textContent = 'Studia';
+        st.addEventListener('click', function () { afcStudia(m.id); });
+        riga.appendChild(st);
+      }
+      var esp = document.createElement('button');
+      esp.className = 'ghost afc-ghostbtn';
+      esp.textContent = afcMazzoAperto === m.id ? 'Chiudi ▴' : 'Carte ▾';
+      esp.addEventListener('click', function () {
+        afcMazzoAperto = afcMazzoAperto === m.id ? null : m.id;
+        afcRenderMazzi();
+      });
+      riga.appendChild(esp);
+      var del = document.createElement('button');
+      del.className = 'afc-x';
+      del.setAttribute('aria-label', 'Elimina il mazzo ' + afcTesto(m.nome));
+      del.textContent = '✕';
+      del.addEventListener('click', function () {
+        if (!window.confirm('Eliminare il mazzo «' + afcTesto(m.nome) + '» con tutte le sue carte?')) return;
+        afcDati.mazzi = afcDati.mazzi.filter(function (x) { return x.id !== m.id; });
+        afcSalva(); afcRenderTutto();
+      });
+      riga.appendChild(del);
+      box.appendChild(riga);
+      if (afcMazzoAperto === m.id) {
+        var lista = document.createElement('div');
+        lista.className = 'afc-carte-lista';
+        m.carte.forEach(function (carta) {
+          var cr = document.createElement('div');
+          cr.className = 'afc-carta-riga';
+          cr.innerHTML = '<span class="davanti">' + afcPulisci(afcTesto(carta.fronte)) + '<span class="retro">' + afcPulisci(afcTesto(carta.retro)) + '</span></span>';
+          var cx = document.createElement('button');
+          cx.className = 'afc-x';
+          cx.setAttribute('aria-label', 'Elimina carta');
+          cx.textContent = '✕';
+          cx.addEventListener('click', function () {
+            m.carte = m.carte.filter(function (x) { return x.id !== carta.id; });
+            afcSalva(); afcRenderTutto();
+          });
+          cr.appendChild(cx);
+          lista.appendChild(cr);
+        });
+        if (!m.carte.length) lista.innerHTML = '<p class="login-note" style="margin: 0;">Nessuna carta in questo mazzo.</p>';
+        var piu = document.createElement('button');
+        piu.className = 'ghost afc-ghostbtn';
+        piu.textContent = '+ Aggiungi carta';
+        piu.addEventListener('click', function () {
+          afcApriModal('afc-modal-carta');
+          sfc('afc-mc-mazzo').value = m.id;
+        });
+        lista.appendChild(piu);
+        box.appendChild(lista);
+      }
+    });
+  };
+  var afcRenderOggi = function () {
+    var box = sfc('afc-oggi');
+    box.innerHTML = '';
+    var conDovute = afcDati.mazzi.filter(function (m) { return afcDovuteMazzo(m) > 0; });
+    if (!conDovute.length) {
+      box.innerHTML = '<div class="afc-vuotopann"><p class="body">Tutto in pari: nessuna carta in scadenza oggi. Le carte torneranno da sole quando starai per dimenticarle.</p></div>';
+      return;
+    }
+    conDovute.forEach(function (m) {
+      var dovute = afcDovuteMazzo(m);
+      var riga = document.createElement('div');
+      riga.className = 'afc-mazzo-riga';
+      riga.innerHTML = '<span class="afc-dot" style="background: ' + m.colore + ';" aria-hidden="true"></span>' +
+        '<span class="afc-mazzo-info"><span class="afc-mazzo-nome">' + afcPulisci(afcTesto(m.nome)) + '</span>' +
+        '<span class="afc-mazzo-meta"><span class="dovute">' + dovute + (dovute === 1 ? ' carta' : ' carte') + ' da ripassare</span></span></span>';
+      var st = document.createElement('button');
+      st.className = 'pill';
+      st.style.padding = '11px 20px';
+      st.textContent = 'Inizia sessione';
+      st.addEventListener('click', function () { afcStudia(m.id); });
+      riga.appendChild(st);
+      box.appendChild(riga);
+    });
+  };
+  /* ---- studio ---- */
+  var stCoda = [], stPos = 0, stMazzo = null, stGirata = false, stVista = false, stFatte = 0, stSwapT = null;
+  var afcStFacce = function () {
+    sfc('afc-st-front').setAttribute('aria-hidden', stGirata ? 'true' : 'false');
+    sfc('afc-st-back').setAttribute('aria-hidden', stGirata ? 'false' : 'true');
+  };
+  var afcStContenuto = function () {
+    var carta = stCoda[stPos];
+    sfc('afc-st-q').innerHTML = carta.fronte;
+    sfc('afc-st-a').innerHTML = carta.retro;
+  };
+  var afcStudia = function (mazzoId) {
+    stMazzo = afcDati.mazzi.filter(function (m) { return m.id === mazzoId; })[0];
+    if (!stMazzo) return;
+    stCoda = stMazzo.carte.filter(afcDovuta).slice();
+    if (!stCoda.length) return;
+    stPos = 0; stGirata = false; stVista = false; stFatte = 0;
+    ['mazzi', 'oggi', 'prog'].forEach(function (t) { sfc('afc-' + t).hidden = true; });
+    sfc('afc-studio').hidden = false;
+    sfc('afc-st-mazzo').textContent = afcTesto(stMazzo.nome);
+    sfc('afc-st-done').classList.remove('on');
+    document.querySelector('#afc-studio .fc-scene').style.display = '';
+    sfc('afc-st-actions').style.display = '';
+    sfc('afc-st-card').classList.remove('flip');
+    sfc('afc-st-mostra').hidden = false;
+    sfc('afc-st-ratings').hidden = true;
+    afcStFacce();
+    afcStContenuto();
+    afcStAggiorna();
+  };
+  var afcStAggiorna = function () {
+    sfc('afc-st-conta').textContent = (stPos + 1) + ' / ' + stCoda.length;
+    sfc('afc-st-bar').style.width = (stPos / stCoda.length * 100) + '%';
+  };
+  var afcStGira = function () {
+    stGirata = !stGirata;
+    if (stGirata && !stVista) {
+      stVista = true;
+      sfc('afc-st-mostra').hidden = true;
+      sfc('afc-st-ratings').hidden = false;
+    }
+    sfc('afc-st-card').classList.toggle('flip', stGirata);
+    afcStFacce();
+  };
+  var afcStVota = function (r) {
+    if (!stVista) return;
+    var carta = stCoda[stPos];
+    afcProgramma(carta, r);
+    afcDati.reviews.push({ c: carta.id, r: r, t: Date.now() });
+    stFatte++;
+    if (r === 0) stCoda.push(carta);
+    afcSalva();
+    stGirata = false; stVista = false;
+    sfc('afc-st-card').classList.remove('flip');
+    afcStFacce();
+    sfc('afc-st-mostra').hidden = false;
+    sfc('afc-st-ratings').hidden = true;
+    stPos++;
+    if (stPos >= stCoda.length) {
+      document.querySelector('#afc-studio .fc-scene').style.display = 'none';
+      sfc('afc-st-actions').style.display = 'none';
+      sfc('afc-st-bar').style.width = '100%';
+      sfc('afc-st-riass').textContent = stFatte + (stFatte === 1 ? ' carta ripassata.' : ' carte ripassate.') + ' Le prossime scadenze si sono già riprogrammate da sole.';
+      sfc('afc-st-done').classList.add('on');
+      afcContatori();
+    } else {
+      afcStAggiorna();
+      clearTimeout(stSwapT);
+      if (reduced) afcStContenuto();
+      else stSwapT = setTimeout(afcStContenuto, 300);
+    }
+  };
+  /* ---- progressi: curva del sapere + sapometro ---- */
+  var afcRenderProg = function () {
+    var box = sfc('afc-prog');
+    var reviews = afcDati.reviews.slice().sort(function (a, b) { return a.t - b.t; });
+    var totCarte = afcDati.mazzi.reduce(function (t, m) { return t + m.carte.length; }, 0);
+    if (!reviews.length) {
+      box.innerHTML = '<div class="afc-vuotopann"><p class="body">La tua curva del sapere è pronta a partire: fai qualche sessione di ripasso e ogni carta che consolidi la farà salire.</p></div>';
+      return;
+    }
+    /* curva: carte "consolidate" = ultima risposta Buono o Facile */
+    var ultimo = {}, note = 0, perGiorno = {};
+    reviews.forEach(function (r) {
+      var era = ultimo[r.c] !== undefined && ultimo[r.c] >= 4;
+      var ora = r.r >= 4;
+      if (!era && ora) note++; else if (era && !ora) note--;
+      ultimo[r.c] = r.r;
+      var g = new Date(r.t); g.setHours(0, 0, 0, 0);
+      perGiorno[g.getTime()] = note;
+    });
+    var primo = new Date(reviews[0].t); primo.setHours(0, 0, 0, 0);
+    var serie = [], porta = 0;
+    for (var t = primo.getTime(); t <= afcOggi(); t += GIORNO_MS) {
+      if (perGiorno[t] !== undefined) porta = perGiorno[t];
+      serie.push(porta);
+    }
+    /* precisione (30 giorni), costanza (giorni di fila), trend (vs 7 giorni fa) */
+    var da30 = afcOggi() - 30 * GIORNO_MS, r30 = 0, ok30 = 0;
+    var giorniStudio = {};
+    reviews.forEach(function (r) {
+      if (r.t >= da30) { r30++; if (r.r >= 4) ok30++; }
+      var g = new Date(r.t); g.setHours(0, 0, 0, 0);
+      giorniStudio[g.getTime()] = true;
+    });
+    var precisione = r30 ? Math.round(ok30 / r30 * 100) : 0;
+    var costanza = 0;
+    var cursore = giorniStudio[afcOggi()] ? afcOggi() : afcOggi() - GIORNO_MS;
+    while (giorniStudio[cursore]) { costanza++; cursore -= GIORNO_MS; }
+    var settimanaFa = serie.length > 7 ? serie[serie.length - 8] : 0;
+    var delta = note - settimanaFa;
+    var trend = delta > 0 ? ['↑', 'Positivo', '#2ea3a3'] : delta < 0 ? ['↓', 'Negativo', '#ed4629'] : ['→', 'Stabile', '#9a9a9a'];
+    var copertura = totCarte ? note / totCarte * 100 : 0;
+    var punteggio = Math.round(0.5 * precisione + 0.3 * Math.min(costanza, 14) / 14 * 100 + 0.2 * copertura);
+    var label = punteggio >= 85 ? 'Eccellente' : punteggio >= 70 ? 'Solido' : punteggio >= 50 ? 'In crescita' : punteggio > 0 ? 'Fragile' : 'Da iniziare';
+    var colore = punteggio >= 70 ? '#2ea3a3' : punteggio >= 50 ? '#e6a15e' : '#ed4629';
+    /* svg della curva */
+    var W = 600, H = 190, PAD = 10;
+    var massimo = Math.max(1, Math.max.apply(null, serie));
+    var punti = serie.map(function (v, i) {
+      var x = serie.length === 1 ? W / 2 : PAD + i * (W - 2 * PAD) / (serie.length - 1);
+      var y = H - PAD - v / massimo * (H - 2 * PAD - 22);
+      return [Math.round(x * 10) / 10, Math.round(y * 10) / 10];
+    });
+    var linea = punti.map(function (p, i) { return (i ? 'L' : 'M') + p[0] + ' ' + p[1]; }).join(' ');
+    var areaPath = linea + ' L' + punti[punti.length - 1][0] + ' ' + (H - PAD) + ' L' + punti[0][0] + ' ' + (H - PAD) + ' Z';
+    var fine = punti[punti.length - 1];
+    box.innerHTML =
+      '<div class="afc-prog-griglia">' +
+      '<div class="afc-curva">' +
+        '<p class="afc-etich" style="margin-bottom: 10px;">Curva del sapere · carte consolidate</p>' +
+        '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Curva delle carte consolidate nel tempo: oggi ' + note + ' su ' + totCarte + '">' +
+        '<path d="' + areaPath + '" fill="rgba(46, 163, 163, 0.12)"/>' +
+        '<path d="' + linea + '" fill="none" stroke="#2ea3a3" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>' +
+        '<circle cx="' + fine[0] + '" cy="' + fine[1] + '" r="5" fill="#2ea3a3"/>' +
+        '<text x="' + Math.min(fine[0], W - 30) + '" y="' + Math.max(16, fine[1] - 12) + '" fill="#bdbdbd" font-size="15" text-anchor="middle" font-family="Inter, sans-serif">' + note + '</text>' +
+        '</svg>' +
+        '<p class="login-note" style="margin: 6px 0 0;">' + note + ' carte consolidate su ' + totCarte + ' totali. Una carta conta quando l’ultima risposta è «Buono» o «Facile».</p>' +
+      '</div>' +
+      '<div class="afc-sapometro">' +
+        '<p class="afc-etich">Sapometro</p>' +
+        '<svg viewBox="0 0 200 112" aria-hidden="true">' +
+        '<path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(34, 40, 69, 0.8)" stroke-width="15" stroke-linecap="round"/>' +
+        '<path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="' + colore + '" stroke-width="15" stroke-linecap="round" pathLength="100" stroke-dasharray="' + punteggio + ' 100"/>' +
+        '</svg>' +
+        '<div class="afc-sap-centro"><div class="afc-sap-punti" style="color: ' + colore + ';">' + punteggio + '</div><div class="afc-sap-label">' + label + '</div></div>' +
+        '<div class="afc-sotto3">' +
+          '<div class="afc-sm"><b>' + precisione + '%</b><span>Precisione</span></div>' +
+          '<div class="afc-sm"><b>' + costanza + ' gg</b><span>Costanza</span></div>' +
+          '<div class="afc-sm"><b style="color: ' + trend[2] + ';">' + trend[0] + ' ' + trend[1] + '</b><span>Trend</span></div>' +
+        '</div>' +
+      '</div></div>';
+  };
+  var afcRenderTutto = function () {
+    afcRenderMazzi();
+    afcRenderOggi();
+    if (!sfc('afc-prog').hidden) afcRenderProg();
+    afcContatori();
+  };
+  /* ---- modali ---- */
+  var afcColoreScelto = AFC_COLORI[0];
+  var afcApriModal = function (id) {
+    var m = sfc(id);
+    if (id !== 'afc-modal-mazzo') {
+      ['afc-mc-mazzo', 'afc-mi-mazzo'].forEach(function (sid) {
+        var sel = sfc(sid);
+        sel.innerHTML = afcDati.mazzi.map(function (mz) {
+          return '<option value="' + mz.id + '">' + afcPulisci(afcTesto(mz.nome)) + '</option>';
+        }).join('');
+      });
+    }
+    m.hidden = false;
+    var primo = m.querySelector('input, select, textarea');
+    if (primo) primo.focus({ preventScroll: true });
+  };
+  var afcChiudiModali = function () {
+    ['afc-modal-mazzo', 'afc-modal-carta', 'afc-modal-importa'].forEach(function (id) { sfc(id).hidden = true; });
+  };
+  /* riconosce coppie FRONTE/RETRO (e varianti) da testo incollato */
+  var afcParse = function (testo) {
+    var righe = (testo || '').replace(/\r/g, '').split('\n');
+    var fRe = /^\s*(?:[-*•·]\s*)?(?:#+\s*)?\*{0,2}\s*(?:FRONTE|FRONT|DOMANDA|Q|D)\s*\*{0,2}\s*[:.)]\s*(.*)$/i;
+    var rRe = /^\s*(?:[-*•·]\s*)?(?:#+\s*)?\*{0,2}\s*(?:RETRO|BACK|RISPOSTA|A|R)\s*\*{0,2}\s*[:.)]\s*(.*)$/i;
+    var carte = [], cur = null, modo = null;
+    var chiudi = function () {
+      if (cur && cur.f.trim() && cur.r.trim()) carte.push({ fronte: afcPulisci(cur.f.trim()), retro: afcPulisci(cur.r.trim()) });
+      cur = null; modo = null;
+    };
+    righe.forEach(function (riga) {
+      var m = riga.match(fRe);
+      if (m) { if (cur && cur.r.trim()) chiudi(); if (!cur) cur = { f: '', r: '' }; cur.f = m[1]; modo = 'f'; return; }
+      m = riga.match(rRe);
+      if (m) { if (!cur) cur = { f: '', r: '' }; cur.r = m[1]; modo = 'r'; return; }
+      if (cur && modo && riga.trim()) cur[modo] += ' ' + riga.trim();
+    });
+    chiudi();
+    return carte;
+  };
+  /* ---- ingresso nella vista (per account) ---- */
+  var afcEntra = function (demo) {
+    afcDemo = !!demo;
+    afcMazzoAperto = null;
+    afcDati = afcCarica();
+    if (!afcDati) {
+      afcDati = afcDemo ? afcSeedDemo() : { mazzi: [], reviews: [] };
+      afcSalva();
+    }
+    afcTab('mazzi');
+    afcRenderTutto();
+  };
+  /* ---- eventi ---- */
+  if (sfc('afc-mazzi')) {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-afctab]'), function (b) {
+      b.addEventListener('click', function () { afcTab(b.dataset.afctab); });
+    });
+    sfc('afc-mazzo-apri').addEventListener('click', function () { afcApriModal('afc-modal-mazzo'); });
+    sfc('afc-carta-apri').addEventListener('click', function () {
+      if (!afcDati.mazzi.length) { afcApriModal('afc-modal-mazzo'); return; }
+      afcApriModal('afc-modal-carta');
+    });
+    sfc('afc-importa-apri').addEventListener('click', function () {
+      if (!afcDati.mazzi.length) { afcApriModal('afc-modal-mazzo'); return; }
+      afcApriModal('afc-modal-importa');
+    });
+    var coloriBox = sfc('afc-mm-colori');
+    AFC_COLORI.forEach(function (c, i) {
+      var b = document.createElement('button');
+      b.className = 'afc-colore' + (i === 0 ? ' on' : '');
+      b.style.background = c;
+      b.setAttribute('aria-label', 'Colore ' + (i + 1));
+      b.addEventListener('click', function () {
+        afcColoreScelto = c;
+        Array.prototype.forEach.call(coloriBox.children, function (x) { x.classList.toggle('on', x === b); });
+      });
+      coloriBox.appendChild(b);
+    });
+    sfc('afc-mm-crea').addEventListener('click', function () {
+      var nome = sfc('afc-mm-nome').value.trim();
+      if (!nome) { sfc('afc-mm-nome').focus(); return; }
+      afcDati.mazzi.push({ id: afcId(), nome: afcPulisci(nome), colore: afcColoreScelto, carte: [] });
+      afcSalva();
+      sfc('afc-mm-nome').value = '';
+      afcChiudiModali();
+      afcRenderTutto();
+    });
+    sfc('afc-mc-crea').addEventListener('click', function () {
+      var mid = sfc('afc-mc-mazzo').value;
+      var fronte = sfc('afc-mc-fronte').value.trim();
+      var retro = sfc('afc-mc-retro').value.trim();
+      var m = afcDati.mazzi.filter(function (x) { return x.id === mid; })[0];
+      if (!m || !fronte || !retro) return;
+      m.carte.push({ id: afcId(), fronte: afcPulisci(fronte), retro: afcPulisci(retro), reps: 0, ef: 2.3, int: 0, next: 0 });
+      afcSalva();
+      sfc('afc-mc-fronte').value = ''; sfc('afc-mc-retro').value = '';
+      afcChiudiModali();
+      afcMazzoAperto = mid;
+      afcRenderTutto();
+    });
+    sfc('afc-mi-testo').addEventListener('input', function () {
+      var n = afcParse(sfc('afc-mi-testo').value).length;
+      sfc('afc-mi-conta').textContent = n > 0 ? '✓ ' + n + ' flashcard riconosciute' : 'Nessuna flashcard riconosciuta finora.';
+      sfc('afc-mi-vai').textContent = n > 0 ? 'Importa ' + n + ' flashcard' : 'Importa';
+    });
+    sfc('afc-mi-vai').addEventListener('click', function () {
+      var carte = afcParse(sfc('afc-mi-testo').value);
+      var m = afcDati.mazzi.filter(function (x) { return x.id === sfc('afc-mi-mazzo').value; })[0];
+      if (!m || !carte.length) return;
+      carte.forEach(function (c) {
+        m.carte.push({ id: afcId(), fronte: c.fronte, retro: c.retro, reps: 0, ef: 2.3, int: 0, next: 0 });
+      });
+      afcSalva();
+      sfc('afc-mi-testo').value = '';
+      sfc('afc-mi-conta').textContent = 'Nessuna flashcard riconosciuta finora.';
+      afcChiudiModali();
+      afcMazzoAperto = m.id;
+      afcRenderTutto();
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.afc-modal-x'), function (x) {
+      x.addEventListener('click', afcChiudiModali);
+    });
+    ['afc-modal-mazzo', 'afc-modal-carta', 'afc-modal-importa'].forEach(function (id) {
+      sfc(id).addEventListener('click', function (e) { if (e.target === sfc(id)) afcChiudiModali(); });
+    });
+    window.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') afcChiudiModali();
+    });
+    /* studio */
+    sfc('afc-st-card').addEventListener('click', afcStGira);
+    sfc('afc-st-card').addEventListener('keydown', function (e) {
+      if (e.repeat) return;
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); afcStGira(); }
+    });
+    sfc('afc-st-mostra').addEventListener('click', function () { if (!stGirata) afcStGira(); });
+    Array.prototype.forEach.call(document.querySelectorAll('#afc-st-ratings .fc-rate'), function (b) {
+      b.addEventListener('click', function () { afcStVota(Number(b.dataset.r)); });
+    });
+    sfc('afc-st-torna').addEventListener('click', function () { afcTab('mazzi'); afcRenderTutto(); });
   }
 
   /* ============ SIMULATORE — formato reale della prova, in piccolo ============ */
