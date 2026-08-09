@@ -1021,8 +1021,8 @@ footer { padding: 60px 0 40px; }
       <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
       Continua con Google
     </button>
-    <button class="ghost" id="login-email" style="border: 0; background: none; cursor: pointer; font: inherit;">Accedi con email&nbsp;→</button>
-    <p class="login-note">Demo del concept: l'accesso è simulato — niente password, niente dati veri.</p>
+    <button class="ghost" id="login-demo" style="border: 0; background: none; cursor: pointer; font: inherit;">Prova l'account demo&nbsp;→</button>
+    <p class="login-note">Con Google entri con il tuo account vero. L'account demo mostra dati di esempio, come li vedrebbe uno studente a metà corso.</p>
     </div>
     <div id="login-passo2" style="display: none; gap: 14px; justify-items: start;">
       <div class="gpicker">
@@ -1081,6 +1081,7 @@ footer { padding: 60px 0 40px; }
       </span>
       <span class="label label--quiet">Area studenti</span>
       <span class="chi">
+        <span class="label label--quiet" id="area-demo-chip" style="display: none; color: var(--rosso);">Demo</span>
         <span class="area-avatar" aria-hidden="true" id="area-avatar">G</span>
         <button class="ghost" id="area-esci" style="border: 0; background: none; cursor: pointer; font: inherit;">Esci</button>
       </span>
@@ -1090,16 +1091,17 @@ footer { padding: 60px 0 40px; }
     <div class="area-saluto">
       <p class="label">La tua giornata</p>
       <h2 class="h-lg" id="area-saluto" tabindex="-1">Ciao, <span id="area-nome">Giulia</span>.</h2>
-      <p class="body">Riprendiamo da dove avevi lasciato.</p>
+      <p class="body" id="area-sub">Riprendiamo da dove avevi lasciato.</p>
     </div>
     <div class="area-stats">
       <div class="area-stat"><span class="val" id="area-giorni">—</span><span class="cosa">giorni alla prova nazionale</span></div>
-      <div class="area-stat"><span class="val"><em>14</em></span><span class="cosa">carte da ripassare oggi</span></div>
-      <div class="area-stat"><span class="val">12,5</span><span class="cosa">ore di lezione guardate</span></div>
+      <div class="area-stat"><span class="val" id="area-carte"><em>14</em></span><span class="cosa">carte da ripassare oggi</span></div>
+      <div class="area-stat"><span class="val" id="area-ore">12,5</span><span class="cosa">ore di lezione guardate</span></div>
     </div>
     <div class="area-blocco">
       <h3 class="h-xs">Continua a guardare</h3>
       <div class="lez-scroll" id="area-continua" role="list" aria-label="Lezioni da riprendere"></div>
+      <p class="body" id="area-continua-vuoto" style="display: none;">Ancora nessuna lezione: quando i docenti caricheranno le prime videolezioni le troverai qui, pronte da riprendere dal punto esatto.</p>
     </div>
     <div class="area-blocco">
       <h3 class="h-xs">I tuoi moduli</h3>
@@ -1110,8 +1112,9 @@ footer { padding: 60px 0 40px; }
       </div>
     </div>
     <div class="area-blocco">
-      <h3 class="h-xs">Da ripassare oggi <span class="lez-count">Unità 7 · L'apoptosi</span></h3>
+      <h3 class="h-xs">Da ripassare oggi <span class="lez-count" id="area-fc-sotto">Unità 7 · L'apoptosi</span></h3>
       <div class="area-fc-slot" id="area-fc-slot"></div>
+      <p class="body" id="area-fc-vuoto" style="display: none;">Nessuna carta da ripassare: i mazzi di flashcard arriveranno insieme alle prime lezioni.</p>
     </div>
     <div class="area-blocco">
       <h3 class="h-xs">Allenati sul formato vero</h3>
@@ -1352,7 +1355,7 @@ footer { padding: 60px 0 40px; }
     };
     navLogin.addEventListener('click', function (e) {
       e.preventDefault();
-      if (utenteDemo()) apriArea(e.currentTarget, utenteDemo());
+      if (utenteDemo()) apriArea(e.currentTarget, utenteDemo(), modoDemo());
       else apriLogin(e);
     });
     loginClose.addEventListener('click', chiudiLogin);
@@ -1495,35 +1498,81 @@ footer { padding: 60px 0 40px; }
   /* ============ AREA STUDENTI — pagina interna (demo) ============ */
   var areaBox = document.getElementById('area');
   var AREA_KEY = 'agtest-demo-utente';
+  var AREA_MODO = 'agtest-modo';
   var utenteDemo = function () {
     try { return localStorage.getItem(AREA_KEY); } catch (err) { return null; }
   };
+  var modoDemo = function () {
+    /* i vecchi salvataggi non hanno il modo: e' demo solo se il nome e' quello d'esempio */
+    try {
+      var m = localStorage.getItem(AREA_MODO);
+      if (m) return m === 'demo';
+    } catch (err) {}
+    return utenteDemo() === 'Giulia';
+  };
   var fcDemoNodo = document.querySelector('#flashcard .fc-demo');
   var fcDemoCasa = fcDemoNodo ? fcDemoNodo.parentElement : null;
-  var apriArea = function (opener, nome) {
+  var apriArea = function (opener, nome, demo) {
     if (!areaBox) return;
-    nome = nome || 'Giulia';
+    demo = !!demo;
+    nome = nome || (demo ? 'Giulia' : 'Studente');
     var elNome = document.getElementById('area-nome');
     if (elNome) elNome.textContent = nome;
     var elAva = document.getElementById('area-avatar');
     if (elAva) elAva.textContent = nome.charAt(0).toUpperCase();
-    areaBox.hidden = false;
-    document.body.style.overflow = 'hidden';
-    /* le flashcard vere si spostano dentro l'area (e tornano a posto all'uscita) */
-    var slot = document.getElementById('area-fc-slot');
-    if (fcDemoNodo && slot && fcDemoNodo.parentElement !== slot) slot.appendChild(fcDemoNodo);
-    /* giorni alla prova nazionale, calcolati davvero */
+    var chip = document.getElementById('area-demo-chip');
+    if (chip) chip.style.display = demo ? '' : 'none';
+    /* un account VERO parte vuoto: i dati d'esempio esistono solo nell'account demo */
+    var sub = document.getElementById('area-sub');
+    if (sub) sub.textContent = demo ? 'Riprendiamo da dove avevi lasciato.' : 'Il tuo percorso inizia qui.';
+    var carte = document.getElementById('area-carte');
+    if (carte) carte.innerHTML = demo ? '<em>14</em>' : '0';
+    var ore = document.getElementById('area-ore');
+    if (ore) ore.textContent = demo ? '12,5' : '0';
+    /* giorni alla prova nazionale, calcolati davvero (vale per tutti) */
     var giorni = Math.max(0, Math.ceil((new Date('2026-12-10T11:00:00') - new Date()) / 86400000));
     document.getElementById('area-giorni').textContent = giorni;
-    /* "continua a guardare": tutte le lezioni con un progresso */
+    /* continua a guardare */
     var cont = document.getElementById('area-continua');
-    if (cont && !cont.childElementCount) {
-      MODULI.forEach(function (mod) {
-        mod.lezioni.forEach(function (lez) {
-          if (lez.prog) cont.appendChild(creaCardLezione(mod, lez));
+    var contVuoto = document.getElementById('area-continua-vuoto');
+    if (cont) {
+      if (demo && !cont.childElementCount) {
+        MODULI.forEach(function (mod) {
+          mod.lezioni.forEach(function (lez) {
+            if (lez.prog) cont.appendChild(creaCardLezione(mod, lez));
+          });
         });
-      });
+      }
+      cont.style.display = demo ? '' : 'none';
     }
+    if (contVuoto) contVuoto.style.display = demo ? 'none' : '';
+    /* progressi dei moduli */
+    var datiMod = demo ? [[12, 28, 42], [5, 27, 18], [2, 26, 7]] : [[0, 28, 0], [0, 27, 0], [0, 26, 0]];
+    Array.prototype.forEach.call(areaBox.querySelectorAll('.area-mod'), function (riga, i) {
+      var d = datiMod[i];
+      if (!d) return;
+      var lab = riga.querySelector('.riga span');
+      if (lab) lab.textContent = d[0] + ' lezioni su ' + d[1] + ' · ' + d[2] + '%';
+      var barra = riga.querySelector('.barra i');
+      if (barra) barra.style.width = d[2] + '%';
+    });
+    /* flashcard: solo l'account demo ha il mazzo di prova */
+    var slot = document.getElementById('area-fc-slot');
+    var fcVuoto = document.getElementById('area-fc-vuoto');
+    var fcSotto = document.getElementById('area-fc-sotto');
+    if (demo) {
+      if (fcDemoNodo && slot && fcDemoNodo.parentElement !== slot) slot.appendChild(fcDemoNodo);
+      if (slot) slot.style.display = '';
+      if (fcVuoto) fcVuoto.style.display = 'none';
+      if (fcSotto) fcSotto.style.display = '';
+    } else {
+      if (fcDemoNodo && fcDemoCasa && fcDemoNodo.parentElement !== fcDemoCasa) fcDemoCasa.appendChild(fcDemoNodo);
+      if (slot) slot.style.display = 'none';
+      if (fcVuoto) fcVuoto.style.display = '';
+      if (fcSotto) fcSotto.style.display = 'none';
+    }
+    areaBox.hidden = false;
+    document.body.style.overflow = 'hidden';
     areaBox.scrollTop = 0;
     var saluto = document.getElementById('area-saluto');
     if (saluto) saluto.focus({ preventScroll: true });
@@ -1534,12 +1583,15 @@ footer { padding: 60px 0 40px; }
     document.body.style.overflow = '';
     if (fcDemoNodo && fcDemoCasa && fcDemoNodo.parentElement !== fcDemoCasa) fcDemoCasa.appendChild(fcDemoNodo);
   };
-  var accessoConNome = function (nome) {
-    try { localStorage.setItem(AREA_KEY, nome); } catch (err) {}
+  var accessoConNome = function (nome, demo) {
+    try {
+      localStorage.setItem(AREA_KEY, nome);
+      localStorage.setItem(AREA_MODO, demo ? 'demo' : 'reale');
+    } catch (err) {}
     if (typeof chiudiLogin === 'function') chiudiLogin();
-    apriArea(navLogin, nome);
+    apriArea(navLogin, nome, demo);
   };
-  var accessoDemo = function () { accessoConNome('Giulia'); };
+  var accessoDemo = function () { accessoConNome('Giulia', true); };
   /* ====== LOGIN GOOGLE VERO (Google Identity Services) ======
      Si accende incollando qui il Client ID creato su console.cloud.google.com
      (l'indirizzo del sito va registrato fra le "origini JavaScript autorizzate").
@@ -1561,7 +1613,7 @@ footer { padding: 60px 0 40px; }
             var payload = JSON.parse(atob(resp.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
             nome = payload.given_name || payload.name || 'Studente';
           } catch (err) {}
-          accessoConNome(nome);
+          accessoConNome(nome, false); /* account vero: parte vuoto */
         }
       });
       var slotG = document.getElementById('gsi-slot');
@@ -1574,7 +1626,7 @@ footer { padding: 60px 0 40px; }
   }
   if (areaBox) {
     var bg = document.getElementById('login-google');
-    var be = document.getElementById('login-email');
+    var be = document.getElementById('login-demo');
     var passo1 = document.getElementById('login-passo1');
     var passo2 = document.getElementById('login-passo2');
     var mostraPasso = function (due) {
@@ -1604,14 +1656,14 @@ footer { padding: 60px 0 40px; }
     var indietro = document.getElementById('login-indietro');
     if (indietro) indietro.addEventListener('click', function () { mostraPasso(false); });
     document.getElementById('area-esci').addEventListener('click', function () {
-      try { localStorage.removeItem(AREA_KEY); } catch (err) {}
+      try { localStorage.removeItem(AREA_KEY); localStorage.removeItem(AREA_MODO); } catch (err) {}
       chiudiArea();
       if (navLogin) navLogin.focus({ preventScroll: true });
     });
     Array.prototype.forEach.call(document.querySelectorAll('.js-area'), function (el) {
       el.addEventListener('click', function (e) {
         e.preventDefault();
-        if (utenteDemo()) apriArea(el, utenteDemo());
+        if (utenteDemo()) apriArea(el, utenteDemo(), modoDemo());
         else apriLogin(e);
       });
     });
@@ -1620,7 +1672,7 @@ footer { padding: 60px 0 40px; }
     var dalPlayer = function (e) {
       e.preventDefault();
       if (typeof chiudiPlayer === 'function') chiudiPlayer();
-      if (utenteDemo()) apriArea(navLogin, utenteDemo());
+      if (utenteDemo()) apriArea(navLogin, utenteDemo(), modoDemo());
       else apriLogin(e);
     };
     if (vaiArea) vaiArea.addEventListener('click', dalPlayer);
