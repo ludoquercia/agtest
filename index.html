@@ -150,7 +150,8 @@ html.static .reveal { opacity: 1; transform: none; transition: none; }
   pointer-events: none;
 }
 
-section { position: relative; padding: clamp(60px, 9vw, 120px) 0; }
+section { position: relative; z-index: 1; padding: clamp(60px, 9vw, 120px) 0; }
+footer { position: relative; z-index: 1; }
 
 /* ================= NAV ================= */
 header {
@@ -202,13 +203,17 @@ header {
   padding: 140px 0 80px;
   overflow: hidden;
 }
-/* nebulosa: lo sfondo resta nero ma respira — vietato che diventi un pannello grigio */
-.hero::before {
-  content: '';
-  position: absolute;
+/* sfondo vivo: nebulosa + glifi + elica, fisso dietro a TUTTA la pagina */
+.sfondo {
+  position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+}
+.sfondo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background:
     radial-gradient(620px 460px at 16% 28%, rgba(34, 40, 69, 0.55), transparent 70%),
     radial-gradient(460px 420px at 36% 78%, rgba(28, 93, 165, 0.14), transparent 70%),
@@ -235,7 +240,7 @@ header {
 }
 @media (prefers-reduced-motion: reduce) { .glifo { animation-duration: 80s; } }
 html.static .glifo { animation: none; }
-.hero.fuori-vista .glifo { animation-play-state: paused; } /* niente compositor quando l'hero e' fuori viewport */
+.sfondo.fuori-vista .glifo { animation-play-state: paused; }
 @media (max-width: 900px) {
   /* telefono: glifi in colonna sul bordo sinistro, elica sul bordo destro — due fasce che non si accavallano */
   .g-med, .g-chi, .g-fis, .g-bio { opacity: .08; }
@@ -838,8 +843,6 @@ footer { padding: 60px 0 40px; }
       <ul class="nav-links">
         <li><a href="#approccio">Approccio</a></li>
         <li><a href="#servizi">Servizi</a></li>
-        <li><a href="#flashcard">Flashcard</a></li>
-        <li><a href="#lezioni">Lezioni</a></li>
         <li><a href="#successi">Risultati</a></li>
         <li><a href="#team">Team</a></li>
         <li><a href="#contatti">Contatti</a></li>
@@ -851,8 +854,8 @@ footer { padding: 60px 0 40px; }
 
 <!-- ================= HERO ================= -->
 <main id="main">
-<section class="hero" id="top">
-  <div class="glifi" aria-hidden="true">
+<div class="sfondo" id="sfondo" aria-hidden="true">
+  <div class="glifi">
     <!-- medicina: croce -->
     <svg class="glifo g-med" viewBox="0 0 100 100"><path d="M39 12 h22 v27 h27 v22 h-27 v27 h-22 v-27 h-27 v-22 h27 z"/></svg>
     <!-- chimica: anello aromatico -->
@@ -862,7 +865,10 @@ footer { padding: 60px 0 40px; }
     <!-- biologia: cellula -->
     <svg class="glifo g-bio" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38"/><circle cx="42" cy="44" r="13"/><circle cx="64" cy="63" r="4"/><circle cx="61" cy="33" r="3"/></svg>
   </div>
-  <canvas id="dna" aria-hidden="true"></canvas>
+  <canvas id="dna"></canvas>
+</div>
+
+<section class="hero" id="top">
   <div class="wrap hero-inner">
     <div class="hero-copy">
       <p class="label">Scuola di preparazione · Area medica e sanitaria</p>
@@ -870,7 +876,7 @@ footer { padding: 60px 0 40px; }
       <p class="body">Corsi di preparazione al <strong>semestre filtro di Medicina</strong> e ai test dell’area sanitaria. In presenza a Vibo Valentia e Lamezia Terme, oppure online — con un metodo costruito su di te.</p>
       <div class="hero-cta">
         <a class="pill" href="#contatti">Contattaci</a>
-        <button class="ghost js-simu" style="border: 0; background: none; cursor: pointer; font: inherit;">Prova il simulatore&nbsp;→</button>
+        <button class="ghost js-area" style="border: 0; background: none; cursor: pointer; font: inherit;">Entra nell'area studenti&nbsp;→</button>
       </div>
     </div>
   </div>
@@ -938,6 +944,7 @@ footer { padding: 60px 0 40px; }
   <div class="wrap">
     <p class="label reveal">Servizi</p>
     <h2 class="h reveal" style="margin-top: 18px; max-width: 800px;">Scegli il percorso. Al resto pensiamo noi.</h2>
+    <p class="body reveal" style="margin-top: 22px;">Con l'iscrizione si sblocca l'<strong>area studenti riservata</strong>: videolezioni divise per modulo, flashcard con ripetizione spaziata e il simulatore col formato reale della prova.</p>
     <div class="services">
       <div class="service reveal">
         <div class="service-head">
@@ -969,64 +976,6 @@ footer { padding: 60px 0 40px; }
         </div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ================= FLASHCARD (demo area studenti) ================= -->
-<section id="flashcard">
-  <div class="wrap">
-    <div class="fc-wrap">
-      <div class="fc-copy reveal">
-        <p class="label">Area studenti · Anteprima</p>
-        <h2 class="h">Ripassare non è rileggere.</h2>
-        <p class="body">Nella nuova area studenti ogni unità del syllabus avrà il suo mazzo di <strong>flashcard con ripetizione spaziata</strong>: ogni carta torna proprio quando stai per dimenticarla. Provale qui: sei carte sull’apoptosi, dall’Unità 7.</p>
-        <p class="fc-kbd">Tocca o clicca la carta per girarla · da tastiera: spazio = gira, 1–4 = valuta</p>
-      </div>
-      <div class="fc-demo reveal">
-        <div class="fc-meta"><span id="fc-count">1 / 6</span><span>Unità 7 · Apoptosi</span></div>
-        <div class="fc-bar" aria-hidden="true"><span id="fc-bar"></span></div>
-        <div class="fc-scene" id="fc-scene">
-          <div class="fc-card" id="fc-card" tabindex="0" role="button">
-            <div class="fc-face" id="fc-front">
-              <p class="fc-tag">Domanda</p>
-              <p class="fc-text" id="fc-q"></p>
-              <p class="fc-hint">Tocca o clicca per la risposta</p>
-            </div>
-            <div class="fc-face fc-face--back" id="fc-back" aria-hidden="true">
-              <p class="fc-tag">Risposta</p>
-              <p class="fc-text" id="fc-a"></p>
-              <p class="fc-hint">Tocca o clicca per la domanda</p>
-            </div>
-          </div>
-        </div>
-        <div class="fc-done" id="fc-done">
-          <p class="h-xs" id="fc-done-title" tabindex="-1">Sessione <span style="color:var(--rosso)">completata</span>.</p>
-          <p>Nell’area studenti troverai i mazzi di tutte le unità del syllabus, con le statistiche di ripasso e le carte che tornano da sole al momento giusto.</p>
-          <a class="ghost" href="#" id="fc-restart">Ricomincia&nbsp;↺</a>
-        </div>
-        <div class="fc-actions" id="fc-actions">
-          <button class="pill" id="fc-show">Mostra risposta</button>
-          <div class="fc-ratings" id="fc-ratings" hidden>
-            <button class="fc-rate" data-rate="again"><i style="background:#ed4629"></i>Di nuovo</button>
-            <button class="fc-rate" data-rate="hard"><i style="background:#e6a15e"></i>Difficile</button>
-            <button class="fc-rate" data-rate="good"><i style="background:#2ea3a3"></i>Buono</button>
-            <button class="fc-rate" data-rate="easy"><i style="background:#2f7fd6"></i>Facile</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= LEZIONI (videoteca stile Netflix) ================= -->
-<section id="lezioni">
-  <div class="wrap">
-    <div class="lez-head reveal">
-      <p class="label">Area studenti · Anteprima</p>
-      <h2 class="h">Le videolezioni, da scorrere come una serie.</h2>
-      <p class="body">I docenti caricano le lezioni dal loro pannello; gli studenti le ritrovano qui — divise nei <strong>tre moduli del semestre filtro</strong>, con l'anteprima e il punto esatto in cui riprendere.</p>
-    </div>
-    <div class="lez-rows" id="lez-rows"></div>
   </div>
 </section>
 
@@ -1120,7 +1069,6 @@ footer { padding: 60px 0 40px; }
       </a>
       <div class="foot-links">
         <a href="#top" class="js-area">Area studenti</a>
-        <a href="#top" class="js-simu">Simulatore</a>
       </div>
     </div>
     <p class="concept-note">Concept di redesign — anteprima non ufficiale · agosto 2026</p>
@@ -1674,9 +1622,9 @@ footer { padding: 60px 0 40px; }
       { n: '06', t: 'Termodinamica', d: '46 min', desc: 'Calore, lavoro e i principi: capire prima, calcolare poi.' }
     ] }
   ];
-  var lezRows = document.getElementById('lez-rows');
+  var lezRows = document.getElementById('lez-rows'); /* sezione pubblica rimossa: resta per compatibilita' */
   var lezOverlay = document.getElementById('lez-overlay');
-  if (lezRows && lezOverlay) {
+  if (lezOverlay) {
     var lezClose = document.getElementById('lez-close');
     var lezOpener = null;
     var apriPlayer = function (mod, lez, trigger) {
@@ -1715,7 +1663,7 @@ footer { padding: 60px 0 40px; }
       b.addEventListener('click', function () { apriPlayer(mod, lez, b); });
       return b;
     };
-    MODULI.forEach(function (mod) {
+    if (lezRows) MODULI.forEach(function (mod) {
       var row = document.createElement('div');
       row.className = 'lez-row';
       var top = document.createElement('div');
@@ -2379,6 +2327,29 @@ footer { padding: 60px 0 40px; }
     chiudi();
     return carte;
   };
+  /* ---- carte-errore arrivate dal simulatore ---- */
+  var afcDaSimulatore = function (fronte, retro) {
+    if (!utenteDemo()) return 'login';
+    var demo = modoDemo();
+    var chiave = 'agtest-fc-' + (demo ? 'demo' : 'reale');
+    var usaCorrente = afcDati && afcDemo === demo;
+    var dati = usaCorrente ? afcDati : (function () {
+      try { var raw = localStorage.getItem(chiave); if (raw) return JSON.parse(raw); } catch (err) {}
+      return demo ? afcSeedDemo() : { mazzi: [], reviews: [] };
+    })();
+    var mazzo = dati.mazzi.filter(function (m) { return afcTesto(m.nome) === 'Errori del simulatore'; })[0];
+    if (!mazzo) {
+      mazzo = { id: afcId(), nome: 'Errori del simulatore', colore: '#ed4629', carte: [] };
+      dati.mazzi.push(mazzo);
+    }
+    var testoF = afcTesto(fronte);
+    var doppia = mazzo.carte.some(function (c) { return afcTesto(c.fronte) === testoF; });
+    if (!doppia) mazzo.carte.push({ id: afcId(), fronte: fronte, retro: retro, reps: 0, ef: 2.3, int: 0, next: 0 });
+    if (usaCorrente) { afcSalva(); afcRenderTutto(); }
+    else { try { localStorage.setItem(chiave, JSON.stringify(dati)); } catch (err) {} }
+    return doppia ? 'doppia' : 'ok';
+  };
+
   /* ---- ingresso nella vista (per account) ---- */
   var afcEntra = function (demo) {
     afcDemo = !!demo;
@@ -2641,13 +2612,61 @@ footer { padding: 60px 0 40px; }
           '<span class="esito-icona">' + (data ? (giusta ? '\u2713' : '\u2717') : '\u2013') + '</span>' +
           '<span><strong style="font-weight: var(--w-reg); color: var(--bone);">' + (i + 1) + '.</strong> ' + qz.q +
           '<br>' + (giusta ? 'Giusta: ' + attesa : (data ? 'La tua: ' + rispostaTesto + ' · Giusta: ' + attesa : 'In bianco · Giusta: ' + attesa)) +
-          '<br><span class="spiega">' + qz.spiega + '</span></span></div>');
+          '<br><span class="spiega">' + qz.spiega + '</span>' +
+          (giusta ? '' : '<br><button class="ghost afc-ghostbtn simu-addfc" data-qi="' + i + '" style="font-size: 13px; color: var(--rosso); padding: 6px 0;">+ Aggiungi alle flashcard</button>') +
+          '</span></div>');
       });
       punti = Math.round(punti * 10) / 10;
       sq('simu-punti').innerHTML = String(punti).replace('.', ',') + '<span style="font-size: 0.35em; color: var(--ash);"> / ' + SIMU_QUESITI.length + '</span>';
       sq('simu-verdetto').textContent = (perTempo ? 'Tempo scaduto — consegna automatica. ' : '') +
         'Il punteggio usa le regole vere: +1 giusta, 0 omessa, \u22120,1 sbagliata. Alla prova nazionale i quesiti sono 31 e si passa con 18.';
-      sq('simu-rivedi').innerHTML = '<h3 class="h-xs">Rivedi i quesiti</h3>' + righe.join('');
+      var daRivedere = SIMU_QUESITI.filter(function (qz, i) {
+        if (!rispostaData(i)) return true;
+        return qz.tipo === 'm' ? simuRisposte[i] !== qz.giusta : normalizza(simuRisposte[i]) !== normalizza(qz.risposta);
+      }).length;
+      sq('simu-rivedi').innerHTML = '<h3 class="h-xs">Rivedi i quesiti</h3>' +
+        (daRivedere > 0 ? '<p><button class="ghost afc-ghostbtn" id="simu-tuttefc" style="color: var(--rosso);">Aggiungi tutte le ' + daRivedere + ' da rivedere alle flashcard&nbsp;\u2192</button></p>' : '') +
+        righe.join('');
+      /* ogni errore puo' diventare una flashcard nel mazzo "Errori del simulatore" */
+      var simuCartaDa = function (i) {
+        var qz = SIMU_QUESITI[i];
+        var attesa = qz.tipo === 'm' ? qz.opzioni[qz.giusta] : qz.risposta;
+        return {
+          fronte: qz.q,
+          retro: '<strong>' + attesa + '</strong> \u2014 ' + qz.spiega
+        };
+      };
+      var simuSegna = function (btn, esitoAdd) {
+        if (esitoAdd === 'login') { btn.textContent = 'Accedi all\u2019area studenti per salvarle'; btn.disabled = true; return; }
+        btn.textContent = esitoAdd === 'doppia' ? '\u2713 Gi\u00e0 nelle flashcard' : '\u2713 Aggiunta alle flashcard';
+        btn.disabled = true;
+        btn.style.color = '#2ea3a3';
+        btn.style.cursor = 'default';
+      };
+      Array.prototype.forEach.call(sq('simu-rivedi').querySelectorAll('.simu-addfc'), function (btn) {
+        btn.addEventListener('click', function () {
+          var c = simuCartaDa(Number(btn.dataset.qi));
+          simuSegna(btn, (typeof afcDaSimulatore === 'function') ? afcDaSimulatore(c.fronte, c.retro) : 'login');
+        });
+      });
+      var tutteBtn = sq('simu-tuttefc');
+      if (tutteBtn) {
+        tutteBtn.addEventListener('click', function () {
+          var nuove = 0, gia = 0, login = false;
+          Array.prototype.forEach.call(sq('simu-rivedi').querySelectorAll('.simu-addfc'), function (btn) {
+            if (btn.disabled) return;
+            var c = simuCartaDa(Number(btn.dataset.qi));
+            var esitoAdd = (typeof afcDaSimulatore === 'function') ? afcDaSimulatore(c.fronte, c.retro) : 'login';
+            if (esitoAdd === 'login') { login = true; return; }
+            if (esitoAdd === 'doppia') gia++; else nuove++;
+            simuSegna(btn, esitoAdd);
+          });
+          if (login) { tutteBtn.textContent = 'Accedi all\u2019area studenti per salvarle'; tutteBtn.disabled = true; return; }
+          tutteBtn.textContent = '\u2713 ' + (nuove > 0 ? nuove + ' aggiunte al mazzo \u00abErrori del simulatore\u00bb' : 'Erano gi\u00e0 tutte nel mazzo') + (nuove > 0 && gia > 0 ? ' (' + gia + ' gi\u00e0 presenti)' : '');
+          tutteBtn.disabled = true;
+          tutteBtn.style.color = '#2ea3a3';
+        });
+      }
       simuVista('simu-esito');
       simuBox.scrollTop = 0;
     };
