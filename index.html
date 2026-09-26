@@ -1089,7 +1089,7 @@ footer { padding: 60px 0 40px; }
       Continua con Google
     </button>
     <button class="ghost" id="login-demo" style="border: 0; background: none; cursor: pointer; font: inherit;">Prova l'account demo&nbsp;→</button>
-    <p class="login-note">Con Google entri con il tuo account vero. L'account demo mostra dati di esempio, come li vedrebbe uno studente a metà corso.</p>
+    <p class="login-note">Con Google salvi quiz, flashcard e progressi nella tua area personale. L’account demo mostra soltanto dati di esempio.</p>
     </div>
     <div id="login-passo2" style="display: none; gap: 14px; justify-items: start;">
       <div class="gpicker">
@@ -1111,7 +1111,7 @@ footer { padding: 60px 0 40px; }
         </div>
       </div>
       <button class="ghost gindietro" id="login-indietro" style="border: 0; background: none; cursor: pointer; font: inherit;">‹&nbsp;Torna indietro</button>
-      <p class="login-note" id="login-nota-passo2">Schermata dimostrativa: nel sito vero qui compare il tuo account Google reale.</p>
+      <p class="login-note" id="login-nota-passo2">Accedi con Google per salvare i tuoi progressi personali.</p>
     </div>
   </div>
 </div>
@@ -1574,8 +1574,8 @@ footer { padding: 60px 0 40px; }
     };
     navLogin.addEventListener('click', function (e) {
       e.preventDefault();
-      if (utenteDemo()) apriArea(e.currentTarget, utenteDemo(), modoDemo());
-      else apriLogin(e);
+      if (utenteDemo() && modoDemo()) apriArea(e.currentTarget, utenteDemo(), true);
+      else location.href = 'https://agtest-classe.ludoquercia.chatgpt.site/studio';
     });
     loginClose.addEventListener('click', chiudiLogin);
     loginOverlay.addEventListener('click', function (e) { if (e.target === loginOverlay) chiudiLogin(); });
@@ -1732,6 +1732,7 @@ footer { padding: 60px 0 40px; }
   var fcDemoNodo = document.querySelector('#flashcard .fc-demo');
   var fcDemoCasa = fcDemoNodo ? fcDemoNodo.parentElement : null;
   var apriArea = function (opener, nome, demo) {
+    if (!demo) { location.href = 'https://agtest-classe.ludoquercia.chatgpt.site/studio'; return; }
     if (!areaBox) return;
     demo = !!demo;
     nome = nome || (demo ? 'Giulia' : 'Studente');
@@ -1838,23 +1839,45 @@ footer { padding: 60px 0 40px; }
     var gsi = document.createElement('script');
     gsi.src = 'https://accounts.google.com/gsi/client';
     gsi.async = true;
-    gsi.onload = function () {
+    gsi.onload = async function () {
       if (!window.google || !google.accounts || !google.accounts.id) return;
+      var loginNonce;
+      try {
+        var challengeResponse = await fetch('https://agtest-classe.ludoquercia.chatgpt.site/api/student/challenge', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+        if (!challengeResponse.ok) throw new Error('Accesso non disponibile');
+        loginNonce = (await challengeResponse.json()).nonce;
+      } catch (err) {
+        var loginNote = document.getElementById('login-nota-passo2');
+        if (loginNote) loginNote.textContent = 'Accesso personale momentaneamente non disponibile. Ricarica la pagina per riprovare.';
+        return;
+      }
       google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
+        nonce: loginNonce,
         callback: function (resp) {
-          var nome = 'Studente';
-          try {
-            var payload = JSON.parse(atob(resp.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
-            nome = payload.given_name || payload.name || 'Studente';
-          } catch (err) {}
-          accessoConNome(nome, false); /* account vero: parte vuoto */
+          var form = document.createElement('form');
+          form.method = 'POST';
+          form.action = 'https://agtest-classe.ludoquercia.chatgpt.site/api/student/login';
+          var params = new URLSearchParams(location.search);
+          var fields = { credential: resp.credential, nonce: loginNonce };
+          var room = params.get('room');
+          if (room && /^[a-f0-9]{16}$/.test(room)) {
+            fields.room = room;
+            try { fields.token = localStorage.getItem('agtest-live:' + room) || ''; } catch (err) {}
+            if (params.get('questions')) fields.questions = params.get('questions');
+          }
+          Object.keys(fields).forEach(function (name) {
+            var field = document.createElement('input'); field.type = 'hidden';
+            field.name = name; field.value = fields[name]; form.appendChild(field);
+          });
+          document.body.appendChild(form); form.submit();
         }
       });
       var slotG = document.getElementById('gsi-slot');
       if (slotG) {
         google.accounts.id.renderButton(slotG, { theme: 'outline', size: 'large', text: 'continue_with', locale: 'it' });
         googlePronto = true;
+        var demoChoices = document.getElementById('gacct-demo'); if (demoChoices) demoChoices.style.display = 'none';
       }
     };
     document.head.appendChild(gsi);
@@ -1928,11 +1951,20 @@ footer { padding: 60px 0 40px; }
     var dalPlayer = function (e) {
       e.preventDefault();
       if (typeof chiudiPlayer === 'function') chiudiPlayer();
+      if (utenteDemo() && !modoDemo()) { location.href = 'https://agtest-classe.ludoquercia.chatgpt.site/studio'; return; }
       if (utenteDemo()) apriArea(navLogin, utenteDemo(), modoDemo());
       else apriLogin(e);
     };
     if (vaiArea) vaiArea.addEventListener('click', dalPlayer);
     if (playArea) playArea.addEventListener('click', dalPlayer);
+  }
+
+  if (new URLSearchParams(location.search).get('studio') === '1') {
+    var demoLogin = document.getElementById('gacct-demo'); if (demoLogin) demoLogin.style.display = 'none';
+    apriLogin({ currentTarget: navLogin });
+    document.getElementById('login-google').click();
+    if (demoLogin) demoLogin.style.display = 'none';
+    document.getElementById('login-nota-passo2').textContent = 'Accedi per ritrovare quiz, flashcard e progressi personali.';
   }
 
   /* ============ FLASHCARD DELL'AREA — sistema completo stile MedOs ============
