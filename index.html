@@ -1558,8 +1558,8 @@ footer { padding: 60px 0 40px; }
     var loginClose = document.getElementById('login-close');
     var loginOpener = null;
     var apriLogin = function (e) {
-      e.preventDefault(); /* senza JS il link porta comunque alla piattaforma */
-      loginOpener = e.currentTarget;
+      if (e) e.preventDefault(); /* l'apertura automatica non ha un evento click */
+      loginOpener = e ? e.currentTarget : navLogin;
       loginOverlay.hidden = false;
       var g = loginOverlay.querySelector('.google-btn');
       if (g) g.focus({ preventScroll: true });
@@ -1961,7 +1961,7 @@ footer { padding: 60px 0 40px; }
 
   if (new URLSearchParams(location.search).get('studio') === '1') {
     var demoLogin = document.getElementById('gacct-demo'); if (demoLogin) demoLogin.style.display = 'none';
-    apriLogin({ currentTarget: navLogin });
+    apriLogin();
     document.getElementById('login-google').click();
     if (demoLogin) demoLogin.style.display = 'none';
     document.getElementById('login-nota-passo2').textContent = 'Accedi per ritrovare quiz, flashcard e progressi personali.';
